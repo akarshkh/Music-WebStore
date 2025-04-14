@@ -3,23 +3,46 @@
     color: var(--font-color);
   }
   
-  .song-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 1.5rem;
-  }
-  
-  .song-card {
-    background: var(--secondary-bg);
-    border-radius: 1rem;
-    padding: 1rem;
-    text-align: center;
-    transition: transform 0.2s;
-  }
-  
-  .song-card:hover {
-    transform: scale(1.03);
-  }
+  .search-input {
+  padding: 0.75rem 1rem;
+  width: 100%;
+  max-width: 400px;
+  margin: 1rem auto;
+  border-radius: 10px;
+  border: 1px solid #444;
+  background-color: #1e1e1e;
+  color: var(--font-color);
+  font-size: 1rem;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+  display: block;
+}
+
+
+ .song-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.song-card {
+  background: var(--secondary-bg);
+  border-radius: 1rem;
+  padding: 1rem;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  transition: transform 0.2s, background 0.3s;
+}
+
+.song-card:hover {
+  transform: scale(1.03);
+  background: #292929;
+}
+
   
   .cover-image {
     width: 100%;
@@ -46,4 +69,7 @@
     font-size: 0.9rem;
     color: var(--font-color-compliment);
   }
-  
+  .song-info audio {
+  width: 100%;
+  margin-top: 1rem;
+}

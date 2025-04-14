@@ -4,11 +4,16 @@ import "./SearchPage.css";
 const SearchPage = () => {
   const [songs, setSongs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [query, setQuery] = useState("");
 
   useEffect(() => {
     const fetchSongs = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/songs/songs");
+        const url = query.trim()
+          ? `http://localhost:5000/api/songs/search?q=${encodeURIComponent(query)}`
+          : `http://localhost:5000/api/songs/songs`;
+
+        const response = await fetch(url);
         const data = await response.json();
         setSongs(data);
       } catch (err) {
@@ -18,40 +23,59 @@ const SearchPage = () => {
       }
     };
 
-    fetchSongs();
-  }, []);
+    const delayDebounce = setTimeout(() => {
+      fetchSongs();
+    }, 400);
+
+    return () => clearTimeout(delayDebounce);
+  }, [query]);
 
   return (
     <div className="search-page">
-      <h1>Search Results</h1>
+      <h1>Search Songs</h1>
+      <input
+        type="text"
+        placeholder="Search by title, artist, tags or genre..."
+        value={query}
+        onChange={(e) => {
+          setQuery(e.target.value);
+          setLoading(true);
+        }}
+        className="search-input"
+      />
+
       {loading ? (
         <p>Loading...</p>
       ) : songs.length === 0 ? (
         <p>No songs found.</p>
       ) : (
-        <ul className="song-list">
+        <div className="song-grid">
           {songs.map((song) => (
-            <li key={song._id} className="song-card">
+            <div key={song._id} className="song-card">
               <div className="cover">
                 {song.coverImage ? (
                   <img
                     src={`http://localhost:5000/api/upload/files/${song.coverImage}`}
                     alt={song.songTitle}
+                    className="cover-image"
                   />
                 ) : (
                   <div className="cover-placeholder">🎵</div>
                 )}
               </div>
-              <div className="info">
+              <div className="song-info">
                 <h3>{song.songTitle}</h3>
                 <p>Artist: {song.songArtist}</p>
                 <p>Album: {song.album}</p>
                 <p>Genre: {song.genre}</p>
-                <audio controls src={`http://localhost:5000/api/upload/files/${song.songFile}`} />
+                <audio
+                  controls
+                  src={`http://localhost:5000/api/upload/files/${song.songFile}`}
+                />
               </div>
-            </li>
+            </div>
           ))}
-        </ul>
+        </div>
       )}
     </div>
   );
