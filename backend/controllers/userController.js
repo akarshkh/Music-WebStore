@@ -28,7 +28,7 @@ exports.register = async (req, res) => {
             accessToken, 
             refreshToken, 
             username: newUser.username, 
-            email: newUser.email, // ✅ Include email in response
+            email: newUser.email,
             profilePic: newUser.profilePic || null 
         });
     } catch (error) {
@@ -55,7 +55,7 @@ exports.login = async (req, res) => {
             accessToken, 
             refreshToken, 
             username: user.username, 
-            email: user.email, // ✅ Include email in response
+            email: user.email,
             profilePic: user.profilePic || null 
         });
     } catch (error) {
@@ -87,12 +87,15 @@ exports.refreshToken = async (req, res) => {
 // ✅ Logout user
 exports.logout = async (req, res) => {
     try {
-        const { userId } = req.body; // Extract userId from request body
-        const user = await User.findById(userId);
+        const { refreshToken } = req.body;
+        if (!refreshToken) return res.status(400).json({ message: "Refresh token required" });
+
+        const user = await User.findOne({ refreshToken });
         if (user) {
             user.refreshToken = null;
             await user.save();
         }
+
         res.json({ message: "Logged out successfully" });
     } catch (error) {
         console.error("Logout Error:", error);
@@ -115,7 +118,7 @@ exports.getUserData = async (req, res) => {
 
         res.json({ 
             username: user.username, 
-            email: user.email, // ✅ Ensure email is sent
+            email: user.email,
             profilePic: user.profilePic || null 
         });
     } catch (error) {

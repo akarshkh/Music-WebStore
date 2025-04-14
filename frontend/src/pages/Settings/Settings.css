@@ -1,6 +1,7 @@
 @import url("../variables.css");
 
 .settings-wrapper {
+  margin-top: 120px;
   display: flex;
   justify-content: center;
   align-items: flex-start;

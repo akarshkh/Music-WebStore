@@ -1,8 +1,8 @@
 /* Main Modal Container */
 .media-player-modal-container {
     position: fixed;
-    bottom: 20px;
-    right: 20px;
+    bottom: 90px;
+    right: 10px;
     border-radius: 10px;
     z-index: 1000;
     width: 600px;
@@ -34,7 +34,7 @@
 /* Music Note Button (Toggle) */
 .music-toggle-btn {
     position: fixed;
-    bottom: 100px; /* Adjusted position */
+    bottom: 120px; /* Adjusted position */
     right: 0px;
     background-color: var(--primary-accent);
     color: white;

@@ -3,7 +3,7 @@
 footer {
     padding: 15px 0;
     background: var(--primary-accent);
-    position: relative;
+    position: fixed;
     bottom: 0;
     width: 100%;
     max-width: 100%;

@@ -1,8 +1,8 @@
 .upload-song-container {
   padding: 2rem;
-  min-height: 76vh;
+  height: 100%;
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 120px auto;
 }
 
 .upload-song-header {
@@ -100,7 +100,7 @@
 .upload-songfile {
   cursor: pointer;
   display: inline-block;
-  padding: 0.75rem 1rem;
+  padding: 1rem 1rem;
   border-radius: 0.5rem;
   color: var(--secondary-accent);
   background-color: var(--primary-accent);
@@ -170,10 +170,13 @@
 }
 
 .upload-btn {
+  margin: auto;
+  width: 400px;
+  font-weight: bold;
   background-color: var(--primary-accent);
   color: white;
   border: none;
-  padding: 0.75rem 2rem;
+  padding: 1rem 2rem;
   border-radius: 0.5rem;
   font-size: 1rem;
   cursor: pointer;

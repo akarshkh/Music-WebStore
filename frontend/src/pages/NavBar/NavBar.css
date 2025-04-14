@@ -1,12 +1,16 @@
 /* Navbar Styling */
 .navbar {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 15px 30px;
     background-color: var(--primary-accent);
     color: var(--font-color);
-    position: relative; /* Required to position absolute elements inside */
+    box-sizing: border-box; /* Add this line */
 }
 
 /* Logo */
