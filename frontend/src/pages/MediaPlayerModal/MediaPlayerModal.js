@@ -1,5 +1,6 @@
-import React, { useState, useRef, useEffect, useContext } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// frontend/src/pages/MediaPlayerModal/MediaPlayerModal.js
+import React, { useContext, useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPlay,
   faPause,
@@ -8,70 +9,49 @@ import {
   faStepForward,
   faRedo,
   faHeart,
-  faMusic
-} from '@fortawesome/free-solid-svg-icons';
-import './MediaPlayerModal.css';
-import { MediaPlayerContext } from '../../context/MediaPlayerContext';
+  faMusic,
+} from "@fortawesome/free-solid-svg-icons";
+import "./MediaPlayerModal.css";
+import { MediaPlayerContext } from "../../context/MediaPlayerContext";
 
 const MediaPlayerModal = () => {
-  const { currentSong } = useContext(MediaPlayerContext);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [liked, setLiked] = useState(false);
+  const {
+    currentSong,
+    isPlaying,
+    togglePlayPause,
+    audioRef,
+    seekTo,
+  } = useContext(MediaPlayerContext);
+
   const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [liked, setLiked] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const audioRef = useRef(null);
 
   useEffect(() => {
-    if (audioRef.current) {
-      const updateCurrentTime = () => {
-        setCurrentTime(audioRef.current.currentTime);
-      };
+    const audio = audioRef.current;
+    const updateTime = () => setCurrentTime(audio.currentTime);
+    const updateDuration = () => setDuration(audio.duration);
 
-      audioRef.current.ontimeupdate = updateCurrentTime;
+    audio.addEventListener("timeupdate", updateTime);
+    audio.addEventListener("loadedmetadata", updateDuration);
 
-      // Cleanup on unmount
-      return () => {
-        if (audioRef.current) {
-          audioRef.current.ontimeupdate = null;
-        }
-      };
-    }
-  }, []);
-
-  useEffect(() => {
-    if (audioRef.current && currentSong) {
-      audioRef.current.load();
-      setCurrentTime(0);
-      setIsPlaying(true);
-      audioRef.current.play().catch((err) => {
-        console.error("Audio play failed:", err);
-      });
-    }
-  }, [currentSong]);
-
-  const handlePlayPause = () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current.play().catch((err) => {
-          console.error("Audio play failed:", err);
-        });
-      }
-      setIsPlaying(!isPlaying);
-    }
-  };
-
-  const handleLikeToggle = () => setLiked(!liked);
+    return () => {
+      audio.removeEventListener("timeupdate", updateTime);
+      audio.removeEventListener("loadedmetadata", updateDuration);
+    };
+  }, [audioRef]);
 
   const handleSeek = (e) => {
-    if (audioRef.current) {
-      const newTime =
-        (e.nativeEvent.offsetX / e.target.offsetWidth) *
-        (audioRef.current.duration || 0);
-      setCurrentTime(newTime);
-      audioRef.current.currentTime = newTime;
-    }
+    const newTime = parseFloat(e.target.value);
+    seekTo(newTime);
+    setCurrentTime(newTime);
+  };
+
+  const formatTime = (time) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = String(Math.floor(time % 60)).padStart(2, "0");
+    return `${minutes}:${seconds}`;
   };
 
   const showModal = () => setIsVisible(true);
@@ -80,68 +60,61 @@ const MediaPlayerModal = () => {
   return (
     <div className="media-player-wrapper">
       <button
-        className={`music-toggle-btn ${isVisible ? 'hide-music-toggle' : 'show-music-toggle'}`}
+        className={`music-toggle-btn ${isVisible ? "hide-music-toggle" : "show-music-toggle"}`}
         onMouseEnter={showModal}
       >
         <FontAwesomeIcon icon={faMusic} />
       </button>
 
       <div
-        className={`media-player-modal-container ${isVisible ? '' : 'media-player-hidden'}`}
+        className={`media-player-modal-container ${isVisible ? "" : "media-player-hidden"}`}
         onMouseEnter={showModal}
         onMouseLeave={hideModal}
       >
-        <audio
-          ref={audioRef}
-          preload="auto"
-        >
-          {currentSong && (
-            <source
-              src={`http://localhost:5000/api/upload/files/${currentSong.songFile}`}
-              type="audio/mpeg"
-            />
-          )}
-        </audio>
-
-        <div className="seek-bar-container" onClick={handleSeek}>
-          <div className="seek-bar">
-            <div
-              className="seek-progress"
-              style={{
-                width: `${(currentTime / (audioRef.current?.duration || 1)) * 100}%`,
-              }}
-            />
-            <div className="seek-text">
-              <span>{Math.floor(currentTime / 60)}:{String(Math.floor(currentTime % 60)).padStart(2, '0')}</span>
-              <span>{audioRef.current?.duration ? `${Math.floor(audioRef.current.duration / 60)}:${String(Math.floor(audioRef.current.duration % 60)).padStart(2, '0')}` : '0:00'}</span>
-            </div>
+        <div className="seek-bar-container">
+          <input
+            type="range"
+            className="seek-slider"
+            min="0"
+            max={duration || 0}
+            step="0.1"
+            value={currentTime}
+            onChange={handleSeek}
+          />
+          <div className="seek-text">
+            <span>{formatTime(currentTime)}</span>
+            <span>{formatTime(duration)}</span>
           </div>
         </div>
 
         <div className="media-content">
-          <img
-            src={currentSong ? `http://localhost:5000/api/upload/files/${currentSong.coverImage}` : 'https://via.placeholder.com/150'}
-            alt="Album Cover"
-            className="media-cover"
-          />
+          {currentSong ? (
+            <img
+              src={`http://localhost:5000/api/upload/files/${currentSong.coverImage}`}
+              alt="Album Cover"
+              className="media-cover"
+            />
+          ) : (
+            <div className="media-cover placeholder-cover">
+              <FontAwesomeIcon className="placeholder-cover-icon" icon={faMusic} size="1x" />
+            </div>
+          )}
 
           <div className="media-info">
             <div className="song-title-heart">
               <div className="song-title">{currentSong?.songTitle || "No Song Selected"}</div>
-              <button className="heart-btn" onClick={handleLikeToggle}>
-                <FontAwesomeIcon icon={faHeart} color={liked ? 'var(--primary-accent)' : 'var(--primary-bg)'} />
+              <button className="heart-btn" onClick={() => setLiked(!liked)}>
+                <FontAwesomeIcon icon={faHeart} color={liked ? "white" : "black"} />
               </button>
             </div>
-
             <div className="artist-album">
-              <div className="artist-name">{currentSong?.songArtist || "Artist Name"}</div>
-              <div className="album-name">{currentSong?.album || "Album Name"}</div>
+              <div className="artist-name">{currentSong?.songArtist || "Artist"}</div>
+              <div className="album-name">{currentSong?.album || "Album"}</div>
             </div>
-
             <div className="controls">
               <button className="control-btn"><FontAwesomeIcon icon={faShuffle} /></button>
               <button className="control-btn"><FontAwesomeIcon icon={faStepBackward} /></button>
-              <button className="control-btn" onClick={handlePlayPause}>
+              <button className="control-btn" onClick={togglePlayPause}>
                 <FontAwesomeIcon icon={isPlaying ? faPause : faPlay} />
               </button>
               <button className="control-btn"><FontAwesomeIcon icon={faStepForward} /></button>
