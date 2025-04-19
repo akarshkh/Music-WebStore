@@ -5,7 +5,6 @@ import {
   faHome,
   faUser,
   faUpload,
-  faList,
   faMagnifyingGlass, // ✅ Added for search icon
 } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
@@ -134,11 +133,6 @@ const NavBar = () => {
                 <li>
                   <button onClick={() => navigate("/upload-song")}>
                     <FontAwesomeIcon icon={faUpload} />
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => navigate("/playlist")}>
-                    <FontAwesomeIcon icon={faList} />
                   </button>
                 </li>
               </>

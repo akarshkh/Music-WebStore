@@ -37,11 +37,15 @@ const PageTitleUpdater = () => {
 function App() {
     const [user, setUser] = useState(null);
     const [isLoginOpen, setIsLoginOpen] = useState(false);
+    const [isCheckingLogin, setIsCheckingLogin] = useState(true);
 
     // Check current user login state
     const checkLoginStatus = async () => {
         const token = localStorage.getItem("accessToken");
-        if (!token) return;
+        if (!token) {
+            setIsCheckingLogin(false);
+            return;
+        }
 
         try {
             const response = await fetch("http://localhost:5000/api/users/me", {
@@ -55,6 +59,7 @@ function App() {
                     username: data.username,
                     email: data.email,
                     profilePic: data.profilePic,
+                    _id: data._id,
                 });
             } else {
                 console.warn("Access token might be expired. Attempting to refresh...");
@@ -63,6 +68,8 @@ function App() {
         } catch (error) {
             console.error("Error verifying token:", error);
             await tryRefreshToken();
+        } finally {
+            setIsCheckingLogin(false);
         }
     };
 
@@ -87,7 +94,7 @@ function App() {
                 const data = await response.json();
                 localStorage.setItem("accessToken", data.accessToken);
                 localStorage.setItem("refreshToken", data.refreshToken);
-                await checkLoginStatus(); // Try again after refreshing
+                await checkLoginStatus(); // Retry after refresh
             } else {
                 console.error("Refresh token invalid or expired. Logging out.");
                 handleLogout();
@@ -135,6 +142,11 @@ function App() {
         setUser(null);
     };
 
+    // Optional: Loading screen or skeleton UI
+    if (isCheckingLogin) {
+        return <div>Loading...</div>;
+    }
+
     return (
         <>
             <ThemeSwitcher user={user} />
@@ -142,10 +154,10 @@ function App() {
 
             <Routes>
                 <Route path="/" element={<LandingPage />} />
-                <Route path="/settings" element={<Settings />} />
-                <Route path="/upload-song" element={<UploadSong />} />
-                <Route path="/playlist" element={<Playlists />} />
-                <Route path="/search" element={<SearchPage />} />
+                <Route path="/settings" element={<Settings user={user} />} />
+                <Route path="/upload-song" element={<UploadSong user={user} />} />
+                <Route path="/playlist" element={<Playlists user={user} />} />
+                <Route path="/search" element={<SearchPage user={user} />} />
             </Routes>
 
             <Footer />

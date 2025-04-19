@@ -1,32 +1,49 @@
-import React, { useEffect, useState } from "react";
+// frontend/src/pages/SearchPage/SearchPage.js
+import React, { useEffect, useState, useContext } from "react";
 import "./SearchPage.css";
+import { MediaPlayerContext } from "../../context/MediaPlayerContext";
 
 const SearchPage = () => {
   const [songs, setSongs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
+  const [error, setError] = useState(null); // For error state
+  const { setCurrentSong } = useContext(MediaPlayerContext);
 
   useEffect(() => {
     const fetchSongs = async () => {
-      try {
-        const url = query.trim()
-          ? `http://localhost:5000/api/songs/search?q=${encodeURIComponent(query)}`
-          : `http://localhost:5000/api/songs/songs`;
-
-        const response = await fetch(url);
-        const data = await response.json();
-        setSongs(data);
-      } catch (err) {
-        console.error("Failed to fetch songs:", err);
-      } finally {
-        setLoading(false);
+      if (!query.trim()) {
+        // Fetch all songs when query is empty
+        try {
+          const response = await fetch("http://localhost:5000/api/songs/songs");
+          if (!response.ok) {
+            throw new Error("Failed to fetch songs.");
+          }
+          const data = await response.json();
+          setSongs(data);
+        } catch (err) {
+          console.error("Failed to fetch songs:", err);
+          setError("An error occurred while fetching songs. Please try again.");
+        }
+      } else {
+        // Search songs when query is non-empty
+        try {
+          const url = `http://localhost:5000/api/songs/search?q=${encodeURIComponent(query)}`;
+          const response = await fetch(url);
+          if (!response.ok) {
+            throw new Error("Failed to fetch songs.");
+          }
+          const data = await response.json();
+          setSongs(data);
+        } catch (err) {
+          console.error("Failed to fetch songs:", err);
+          setError("An error occurred while fetching songs. Please try again.");
+        }
       }
+      setLoading(false);
     };
 
-    const delayDebounce = setTimeout(() => {
-      fetchSongs();
-    }, 400);
-
+    const delayDebounce = setTimeout(fetchSongs, 400);
     return () => clearTimeout(delayDebounce);
   }, [query]);
 
@@ -35,7 +52,7 @@ const SearchPage = () => {
       <h1>Search Songs</h1>
       <input
         type="text"
-        placeholder="Search by title, artist, tags or genre..."
+        placeholder="Search by title, artist, tags, or genre..."
         value={query}
         onChange={(e) => {
           setQuery(e.target.value);
@@ -46,12 +63,18 @@ const SearchPage = () => {
 
       {loading ? (
         <p>Loading...</p>
+      ) : error ? (
+        <p>{error}</p> // Display error message
       ) : songs.length === 0 ? (
         <p>No songs found.</p>
       ) : (
         <div className="song-grid">
           {songs.map((song) => (
-            <div key={song._id} className="song-card">
+            <div
+              key={song._id}
+              className="song-card"
+              onClick={() => setCurrentSong(song)} // Fix here to set the current song
+            >
               <div className="cover">
                 {song.coverImage ? (
                   <img
