@@ -55,7 +55,6 @@ router.post(
         let coverImageFileName = null;
 
         if (coverImageBuffer) {
-          // Upload cover image too
           const coverStream = Readable.from(coverImageBuffer.buffer);
           coverImageFileName = `${Date.now()}-${coverImageBuffer.originalname}`;
           const coverUploadStream = gridFSBucket.openUploadStream(coverImageFileName, {
@@ -103,22 +102,47 @@ async function saveSongRecord(title, artist, genre, album, songFile, coverImage,
   }
 }
 
-// ✅ Download route
+// ✅ Streaming download route with byte-range support
 router.get("/files/:filename", async (req, res) => {
   try {
-    const file = await mongoose.connection.db
-      .collection("uploads.files")
-      .findOne({ filename: req.params.filename });
+    const filesCollection = mongoose.connection.db.collection("uploads.files");
+    const file = await filesCollection.findOne({ filename: req.params.filename });
 
-    if (!file) return res.status(404).json({ message: "File not found" });
+    if (!file) {
+      return res.status(404).json({ message: "File not found" });
+    }
 
-    gridFSBucket.openDownloadStreamByName(req.params.filename).pipe(res);
+    const range = req.headers.range;
+    const fileSize = file.length;
+
+    if (!range) {
+      res.set("Content-Length", fileSize);
+      res.set("Content-Type", "audio/mpeg");
+      return gridFSBucket.openDownloadStreamByName(file.filename).pipe(res);
+    }
+
+    const parts = range.replace(/bytes=/, "").split("-");
+    const start = parseInt(parts[0], 10);
+    const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+    const chunkSize = end - start + 1;
+
+    res.status(206).header({
+      "Content-Range": `bytes ${start}-${end}/${fileSize}`,
+      "Accept-Ranges": "bytes",
+      "Content-Length": chunkSize,
+      "Content-Type": "audio/mpeg",
+    });
+
+    gridFSBucket
+      .openDownloadStreamByName(file.filename, { start })
+      .pipe(res);
   } catch (err) {
-    res.status(500).json({ message: "Error retrieving file", error: err.message });
+    console.error("❌ Error streaming file with range:", err);
+    res.status(500).json({ message: "Error streaming file", error: err.message });
   }
 });
 
-// ✅ Test route
+// ✅ Simple test route
 router.get("/test", (req, res) => {
   res.send("✅ Upload route working!");
 });

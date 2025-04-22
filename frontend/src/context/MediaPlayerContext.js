@@ -11,9 +11,23 @@ export const MediaPlayerProvider = ({ children }) => {
   const playSong = async (song) => {
     if (!song) return;
     setCurrentSong(song);
-    audioRef.current.src = `http://localhost:5000/api/upload/files/${song.songFile}`;
+
+    const audio = audioRef.current;
+    audio.src = `http://localhost:5000/api/upload/files/${song.songFile}`;
+    audio.load(); // Force reload for new metadata
+
+    // Wait for metadata to load before playing
+    const waitForMetadata = new Promise((resolve) => {
+      const onLoaded = () => {
+        audio.removeEventListener("loadedmetadata", onLoaded);
+        resolve();
+      };
+      audio.addEventListener("loadedmetadata", onLoaded);
+    });
+
     try {
-      await audioRef.current.play();
+      await waitForMetadata;
+      await audio.play();
       setIsPlaying(true);
     } catch (err) {
       console.error("Playback error:", err);

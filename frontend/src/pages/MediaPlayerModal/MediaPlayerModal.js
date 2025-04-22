@@ -30,17 +30,35 @@ const MediaPlayerModal = () => {
 
   useEffect(() => {
     const audio = audioRef.current;
+    if (!audio) return;
+
     const updateTime = () => setCurrentTime(audio.currentTime);
-    const updateDuration = () => setDuration(audio.duration);
+
+    const updateDuration = () => {
+      if (!isNaN(audio.duration) && audio.duration > 0) {
+        console.log("Updated duration:", audio.duration);
+        setDuration(audio.duration);
+      }
+    };
 
     audio.addEventListener("timeupdate", updateTime);
     audio.addEventListener("loadedmetadata", updateDuration);
+    audio.addEventListener("canplaythrough", updateDuration);
+
+    // Reload metadata if song changed
+    audio.load();
+
+    // In case metadata is already available
+    if (!isNaN(audio.duration)) {
+      setDuration(audio.duration);
+    }
 
     return () => {
       audio.removeEventListener("timeupdate", updateTime);
       audio.removeEventListener("loadedmetadata", updateDuration);
+      audio.removeEventListener("canplaythrough", updateDuration);
     };
-  }, [audioRef]);
+  }, [audioRef, currentSong]);
 
   const handleSeek = (e) => {
     const newTime = parseFloat(e.target.value);
