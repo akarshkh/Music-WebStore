@@ -1,29 +1,24 @@
-
 .search-page {
   margin-top: 100px;
   height: 77vh;
-    padding: 2rem;
-    background-color: var(--primary-bg);
-    color: var(--font-color);
-  }
-  
-  .search-input {
-  padding: 0.75rem 1rem;
-  width: 100%;
+  padding: 2rem;
+  background-color: var(--primary-bg);
+  color: var(--font-color);
+}
+
+.search-input {
+  padding: 20px;
   width: 1200px;
-  margin: 1rem auto;
-  margin-bottom: 60px;
+  margin: 1rem auto 60px auto;
   border-radius: 10px;
   background-color: var(--secondary-bg);
   border: none;
   color: var(--font-color);
   font-size: 1rem;
   display: block;
-  padding: 20px;
 }
 
-
- .song-grid {
+.song-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 2rem;
@@ -35,12 +30,12 @@
   border-radius: 1rem;
   padding: 1rem;
   text-align: center;
-  /* box-shadow: 0 0 10px rgba(255, 255, 255, 0.05); */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
   transition: transform 0.2s, background 0.3s;
+  position: relative;
 }
 
 .song-card:hover {
@@ -48,34 +43,67 @@
   background: var(--secondary-accent);
 }
 
-  
-  .cover-image {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
-    border-radius: 0.75rem;
-  }
-  
-  .cover-placeholder {
-    height: 180px;
-    background: gray;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 0.75rem;
-  }
-  
-  .song-info h3 {
-    color: white;
-    margin: 0.5rem 0 0.25rem;
-  }
-  
-  .song-info p {
-    font-size: 0.9rem;
-    color: white;
-  }
-  .song-info audio {
+.cover-image {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 0.75rem;
+}
+
+.cover-placeholder {
+  height: 180px;
+  background: gray;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.75rem;
+}
+
+.song-info h3 {
+  color: white;
+  margin: 0.5rem 0 0.25rem;
+}
+
+.song-info p {
+  font-size: 0.9rem;
+  color: white;
+  transition: opacity 0.3s ease-in-out;
+  opacity: 1;
+  margin: 0.2rem 0;
+}
+
+.song-info .hover-info {
+  opacity: 0;
+}
+
+.song-card:hover .hover-info {
+  opacity: 1;
+}
+
+.song-info audio {
   width: 100%;
   margin-top: 1rem;
+}
+
+.add-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 1.2rem;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-button:hover {
+  background-color: #218838;
 }

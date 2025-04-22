@@ -1,4 +1,3 @@
-// frontend/src/pages/SearchPage/SearchPage.js
 import React, { useEffect, useState, useContext } from "react";
 import "./SearchPage.css";
 import { MediaPlayerContext } from "../../context/MediaPlayerContext";
@@ -15,7 +14,7 @@ const SearchPage = () => {
       try {
         const url = query.trim()
           ? `http://localhost:5000/api/songs/search?q=${encodeURIComponent(query)}`
-          : "http://localhost:5000/api/songs/songs";
+          : "http://localhost:5000/api/songs/songs?limit=10";
 
         const response = await fetch(url);
         if (!response.ok) throw new Error("Failed to fetch songs.");
@@ -34,6 +33,25 @@ const SearchPage = () => {
     return () => clearTimeout(debounce);
   }, [query]);
 
+  const addToPlaylist = async (songId) => {
+    try {
+      const response = await fetch("http://localhost:5000/api/playlist/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ songId }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || "Failed to add to playlist");
+      alert("Song added to playlist!");
+    } catch (err) {
+      console.error(err);
+      alert("Error adding song to playlist.");
+    }
+  };
+
   return (
     <div className="search-page">
       <h1>Search Songs</h1>
@@ -47,6 +65,14 @@ const SearchPage = () => {
         }}
         className="search-input"
       />
+
+      {!loading && !error && (
+        <h2 className="song-section-title">
+          {query.trim()
+            ? `Search Results for "${query.trim()}"`
+            : "Latest Songs"}
+        </h2>
+      )}
 
       {loading ? (
         <p>Loading...</p>
@@ -62,6 +88,15 @@ const SearchPage = () => {
               className="song-card"
               onClick={() => playSong(song)}
             >
+              <button
+                className="add-button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  addToPlaylist(song._id);
+                }}
+              >
+                +
+              </button>
               <div className="cover">
                 {song.coverImage ? (
                   <img
@@ -75,9 +110,9 @@ const SearchPage = () => {
               </div>
               <div className="song-info">
                 <h3>{song.songTitle}</h3>
-                <p>Artist: {song.songArtist}</p>
-                <p>Album: {song.album}</p>
-                <p>Genre: {song.genre}</p>
+                <p className="artist">Artist: {song.songArtist}</p>
+                <p className="hover-info">Album: {song.album}</p>
+                <p className="hover-info">Genre: {song.genre}</p>
               </div>
             </div>
           ))}
