@@ -36,7 +36,7 @@ const SearchPage = () => {
 
   return (
     <div className="search-page">
-      <h1>Search Songs</h1>
+      <h2>Search Songs</h2>
       <input
         type="text"
         placeholder="Search by title, artist, tags, or genre..."

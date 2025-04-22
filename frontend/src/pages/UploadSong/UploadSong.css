@@ -2,7 +2,7 @@
   padding: 2rem;
   height: 100%;
   max-width: 1200px;
-  margin: 120px auto;
+  margin: 70px auto;
 }
 
 .upload-song-header {
@@ -121,7 +121,7 @@
 }
 
 .edit-icon {
-    padding: 5px;
+  padding: 5px;
   color: var(--font-color);
   font-size: 1rem;
   opacity: 0;
@@ -154,7 +154,7 @@
 }
 
 .form-group input {
-  padding: 1rem;
+  padding: 0.7rem;
   font-size: 20px;
   border-radius: 4px;
   margin-bottom: 1rem;

@@ -151,7 +151,8 @@
     background-color: var(--secondary-bg);
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
     border-radius: 8px;
-    padding: 10px;
+    height: 100px;
+    padding: 15px;
   }
   
   /* Song Title & Like Button */
@@ -159,7 +160,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8px;
+    /* padding: 8px; */
   }
   
   .song-title {
