@@ -5,7 +5,8 @@ import {
   faHome,
   faUser,
   faUpload,
-  faMagnifyingGlass, // ✅ Added for search icon
+  faMagnifyingGlass,
+  faHeart, // Added heart icon for playlist/favorites
 } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import LoginModal from "../../pages/LoginModal/LoginModal";
@@ -127,21 +128,28 @@ const NavBar = () => {
               </button>
             </li>
 
-            {/* ✅ Added Search button */}
             <li>
               <button onClick={() => navigate("/search")}>
                 <FontAwesomeIcon icon={faMagnifyingGlass} />
               </button>
             </li>
 
+            {/* Playlist/Favorites button - only visible when logged in */}
+           {user && (
+  <li>
+    <button onClick={() => navigate("/playlist")} title="My Playlist">
+      <FontAwesomeIcon icon={faHeart} />
+    </button>
+  </li>
+)}
+
+
             {user && (
-              <>
-                <li>
-                  <button onClick={() => navigate("/upload-song")}>
-                    <FontAwesomeIcon icon={faUpload} />
-                  </button>
-                </li>
-              </>
+              <li>
+                <button onClick={() => navigate("/upload-song")}>
+                  <FontAwesomeIcon icon={faUpload} />
+                </button>
+              </li>
             )}
             <li
               className="profile-button"

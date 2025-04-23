@@ -1,8 +1,11 @@
 import React, { useEffect, useState, useContext } from "react";
-import { useParams } from "react-router-dom";
-import { FaPlay, FaPause, FaMusic, FaHeart } from "react-icons/fa";
+import { Link, useParams } from "react-router-dom";
 import "./ArtistDetail.css";
-import { MediaPlayerContext } from "../../context/MediaPlayerContext"; // Import context
+import { FaHeart } from 'react-icons/fa';
+import { FaMusic } from 'react-icons/fa';
+import { MediaPlayerContext } from "../../context/MediaPlayerContext";
+import { FaPlay, FaPause } from "react-icons/fa";
+import LikeButton from "../../pages/LikeButton/LikeButton";
 
 const ArtistDetail = () => {
   const { name } = useParams();

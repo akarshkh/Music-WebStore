@@ -11,6 +11,7 @@ const songRoutes = require("./routes/songs");     // ✅ Only for GET /songs, et
 const uploadRoutes = require("./routes/upload");  // ✅ Handles /upload-song + /files/:filename
 const artistRoutes = require("./routes/artists");
 const albumRoutes = require("./routes/albums"); 
+const playlistRoutes = require("./routes/playlist"); // New route for playlists
 
 // Initialize the app
 const app = express();
@@ -21,6 +22,7 @@ app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 app.use("/api", artistRoutes);
 app.use("/api/albums", albumRoutes);
+app.use("/api/playlists", playlistRoutes);  // Use new playlist routes
 
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, "public")));

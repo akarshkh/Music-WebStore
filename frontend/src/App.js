@@ -11,6 +11,7 @@ import ThemeSwitcher from "./pages/ThemeSwitcher/ThemeSwitcher";
 import MediaPlayerModal from "./pages/MediaPlayerModal/MediaPlayerModal";
 import LoginModal from "./pages/LoginModal/LoginModal";
 import { PROJECT_NAME } from "./config";
+import Playlist from "./pages/Playlists/Playlists";
 
 // Pages
 import LandingPage from "./pages/LandingPage/LandingPage";
@@ -20,8 +21,6 @@ import Playlists from "./pages/Playlists/Playlists";
 import SearchPage from "./pages/SearchPage/SearchPage";
 import ArtistList from "./pages/Artist/ArtistList";
 import ArtistDetail from "./pages/Artist/ArtistDetail";
-
-// ✅ Album pages
 import AlbumList from "./pages/Album/AlbumList";
 import AlbumDetail from "./pages/Album/AlbumDetail";
 
@@ -170,12 +169,8 @@ function App() {
         <Route path="/upload-song" element={<UploadSong user={user} />} />
         <Route path="/playlist" element={<Playlists user={user} />} />
         <Route path="/search" element={<SearchPage user={user} />} />
-
-        {/* ✅ Artist routes */}
         <Route path="/artists" element={<ArtistList />} />
         <Route path="/artist/:name" element={<ArtistDetail />} />
-
-        {/* ✅ Album routes */}
         <Route path="/albums" element={<AlbumList />} />
         <Route path="/album/:albumName" element={<AlbumDetail />} />
       </Routes>

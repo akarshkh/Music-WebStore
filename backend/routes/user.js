@@ -1,19 +1,20 @@
+// backend/routes/user.js
 const express = require("express");
 const router = express.Router();
-const User = require("../models/user");
+const User = require("../models/User");
 const authenticate = require("../middleware/authenticate");
 const bcrypt = require("bcrypt");
 
 // GET /api/users/me - Fetch user info
 router.get("/me", authenticate, async (req, res) => {
-  try {
-    const user = await User.findById(req.userId).select("username email");
-    if (!user) return res.status(404).json({ error: "User not found" });
-    res.json(user);
-  } catch (err) {
-    console.error("Error fetching user info:", err);
-    res.status(500).json({ error: "Server error" });
-  }
+    try {
+        const user = await User.findById(req.userId).select("username email");
+        if (!user) return res.status(404).json({ error: "User not found" });
+        res.json(user);
+    } catch (err) {
+        console.error("Error fetching user info:", err);
+        res.status(500).json({ error: "Server error" });
+    }
 });
 
 // PATCH /api/users/update - Update username, email, and password
