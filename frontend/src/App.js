@@ -1,4 +1,3 @@
-// frontend/src/App.js
 import React, { useEffect, useState } from "react";
 import {
   BrowserRouter as Router,
@@ -19,6 +18,8 @@ import Settings from "./pages/Settings/Settings";
 import UploadSong from "./pages/UploadSong/UploadSong";
 import Playlists from "./pages/Playlists/Playlists";
 import SearchPage from "./pages/SearchPage/SearchPage";
+import ArtistList from "./pages/Artist/ArtistList";        // ✅ Updated path
+import ArtistDetail from "./pages/Artist/ArtistDetail";    // ✅ Updated path
 
 // Context
 import { MediaPlayerProvider } from "./context/MediaPlayerContext";
@@ -34,8 +35,14 @@ const PageTitleUpdater = () => {
       "/upload-song": `Upload Song | ${PROJECT_NAME}`,
       "/playlist": `Playlists | ${PROJECT_NAME}`,
       "/search": `Search | ${PROJECT_NAME}`,
+      "/artists": `Artists | ${PROJECT_NAME}`,
     };
-    document.title = titles[location.pathname] || PROJECT_NAME;
+    if (location.pathname.startsWith("/artist/")) {
+      const artistName = location.pathname.split('/')[2];  // Extract artist name
+      document.title = `Artist: ${artistName} | ${PROJECT_NAME}`;
+    } else {
+      document.title = titles[location.pathname] || PROJECT_NAME;
+    }
   }, [location.pathname]);
 
   return null;
@@ -46,7 +53,6 @@ function App() {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isCheckingLogin, setIsCheckingLogin] = useState(true);
 
-  // Check current user login state
   const checkLoginStatus = async () => {
     const token = localStorage.getItem("accessToken");
     if (!token) {
@@ -69,18 +75,15 @@ function App() {
           _id: data._id,
         });
       } else {
-        console.warn("Access token might be expired. Attempting to refresh...");
         await tryRefreshToken();
       }
     } catch (error) {
-      console.error("Error verifying token:", error);
       await tryRefreshToken();
     } finally {
       setIsCheckingLogin(false);
     }
   };
 
-  // Attempt to refresh tokens
   const tryRefreshToken = async () => {
     const refreshToken = localStorage.getItem("refreshToken");
     if (!refreshToken) {
@@ -93,9 +96,7 @@ function App() {
         "http://localhost:5000/api/auth/refresh-token",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ refreshToken }),
         }
       );
@@ -106,21 +107,17 @@ function App() {
         localStorage.setItem("refreshToken", data.refreshToken);
         await checkLoginStatus(); // Retry after refresh
       } else {
-        console.error("Refresh token invalid or expired. Logging out.");
         handleLogout();
       }
     } catch (error) {
-      console.error("Refresh token error:", error);
       handleLogout();
     }
   };
 
-  // Initial login check
   useEffect(() => {
     checkLoginStatus();
   }, []);
 
-  // Successful login handler
   const handleLoginSuccess = (userData) => {
     setUser(userData);
     setIsLoginOpen(false);
@@ -128,7 +125,6 @@ function App() {
     localStorage.setItem("refreshToken", userData.refreshToken);
   };
 
-  // Logout handler
   const handleLogout = async () => {
     const token = localStorage.getItem("accessToken");
 
@@ -152,7 +148,6 @@ function App() {
     setUser(null);
   };
 
-  // Optional: Loading screen while checking login
   if (isCheckingLogin) {
     return <div>Loading...</div>;
   }
@@ -168,6 +163,10 @@ function App() {
         <Route path="/upload-song" element={<UploadSong user={user} />} />
         <Route path="/playlist" element={<Playlists user={user} />} />
         <Route path="/search" element={<SearchPage user={user} />} />
+
+        {/* ✅ Artist routes */}
+        <Route path="/artists" element={<ArtistList />} />
+        <Route path="/artist/:name" element={<ArtistDetail />} />  {/* Artist details route */}
       </Routes>
 
       <Footer />

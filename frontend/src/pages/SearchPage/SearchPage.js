@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
+import { Link } from "react-router-dom";
 import "./SearchPage.css";
 import { MediaPlayerContext } from "../../context/MediaPlayerContext";
 
@@ -68,9 +69,7 @@ const SearchPage = () => {
 
       {!loading && !error && (
         <h2 className="song-section-title">
-          {query.trim()
-            ? `Search Results for "${query.trim()}"`
-            : "Latest Songs"}
+          {query.trim() ? `Search Results for "${query.trim()}"` : "Latest Songs"}
         </h2>
       )}
 
@@ -110,7 +109,12 @@ const SearchPage = () => {
               </div>
               <div className="song-info">
                 <h3>{song.songTitle}</h3>
-                <p className="artist">Artist: {song.songArtist}</p>
+                <p className="artist">
+                  Artist:{" "}
+                  <Link to={`/artist/${song.songArtist}`} className="artist-link">
+                    {song.songArtist}
+                  </Link>
+                </p>
                 <p className="hover-info">Album: {song.album}</p>
                 <p className="hover-info">Genre: {song.genre}</p>
               </div>

@@ -1,148 +1,106 @@
 /* Navbar Styling */
 .navbar {
-    position: fixed;
-    width: 100%;
-    top: 0;
-    left: 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 30px;
-    background-color: var(--primary-accent);
-    color: var(--font-color);
-    box-sizing: border-box; /* Add this line */
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  background-color: var(--primary-accent);
+  color: var(--font-color);
+  box-sizing: border-box;
 }
 
-/* Logo */
 .navbar .logo {
-    font-size: 1.8rem;
-    font-weight: bold;
-    color: var(--primary-bg);
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: var(--primary-bg);
 }
 
-/* Search Bar */
-.search-bar {
-    display: flex;
-    align-items: center;
-    background: var(--secondary-bg);
-    border-radius: 20px;
-    padding: 5px 10px;
-    width: 40%;
-    min-width: 250px;
-}
-
-.search-bar input {
-    border: none;
-    outline: none;
-    background: transparent;
-    color: var(--font-color);
-    width: 100%;
-    padding: 5px 10px;
-    font-size: 1rem;
-}
-
-.search-bar button {
-    background: none;
-    border: none;
-    color: var(--font-color);
-    cursor: pointer;
-    font-size: 1rem;
-}
-
-.search-bar button:hover {
-    color: var(--secondary-accent);
-}
-
-/* Navigation Menu */
 .navbar ul {
-    list-style: none;
-    display: flex;
-    gap: 15px;
+  list-style: none;
+  display: flex;
+  gap: 15px;
 }
 
 .navbar ul li {
-    display: inline;
+  display: inline;
 }
 
-/* Navigation Buttons */
 .navbar ul li button {
-    background: none;
-    max-width: 40px;
-    max-height: 40px;
-    border: 2px solid transparent;
-    color: var(--primary-bg);
-    font-size: 1rem;
-    padding: 10px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    border-radius: 5px;
+  background: none;
+  max-width: 40px;
+  max-height: 40px;
+  border: 2px solid transparent;
+  color: var(--primary-bg);
+  font-size: 1rem;
+  padding: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 5px;
 }
 
 .navbar ul li button:hover {
-    color: var(--secondary-accent);
+  color: var(--secondary-accent);
 }
 
-/* Profile Placeholder */
 .profile-placeholder {
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #555;
-    color: white;
-    font-size: 18px;
-    font-weight: bold;
-    border-radius: 50%;
-    text-transform: uppercase;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #555;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 50%;
 }
 
-/* Profile Image */
 .profile-img,
 .profile-placeholder {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Profile Button */
 .profile-button {
-    position: relative;
+  position: relative;
 }
 
 .profile-button button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: none;
-    border: none;
-    cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: none;
+  border: none;
+  cursor: pointer;
 }
 
-/* Account Modal Wrapper */
 .account-modal-wrapper {
-    position: absolute;
-    top: 55px;
-    right: 0;
-    z-index: 1000;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-10px);
-    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out, visibility 0.3s;
-    pointer-events: none;
+  position: absolute;
+  top: 55px;
+  right: 0;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out, visibility 0.3s;
+  pointer-events: none;
 }
 
-/* Show the modal when active */
 .account-modal-wrapper.show {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-    pointer-events: auto;
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
 }
