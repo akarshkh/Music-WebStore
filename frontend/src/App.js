@@ -164,7 +164,7 @@ function App() {
       <NavBar user={user} onLogout={handleLogout} />
 
       <Routes>
-        <Route path="/" element={<LandingPage />} />
+        <Route path="/" element={<LandingPage user={user} />} /> {/* Pass user state here */}
         <Route path="/settings" element={<Settings user={user} />} />
         <Route path="/upload-song" element={<UploadSong user={user} />} />
         <Route path="/playlist" element={<Playlists user={user} />} />

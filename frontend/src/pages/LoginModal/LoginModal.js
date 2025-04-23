@@ -40,14 +40,11 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        //Remove this code to enforce the captcha funcionality
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Remove this code to enforce the captcha functionality
         if (window.location.hostname !== "localhost" && !captchaValue) {
             alert("Please complete the CAPTCHA.");
             return;
         }
-        
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         if (isRegistering && formData.password !== formData.confirmPassword) {
             alert("Passwords do not match!");
@@ -91,6 +88,9 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
                     email: data.email,
                     profilePic: data.profilePic || null,
                 });
+
+                // Refresh the page after login success
+                window.location.reload(); // This will reload the entire page.
             } else {
                 alert("Registration successful! Please log in.");
                 setIsRegistering(false);
