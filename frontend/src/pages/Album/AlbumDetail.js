@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { MediaPlayerContext } from "../../context/MediaPlayerContext";
 import { FaHeart, FaPlay, FaPause } from "react-icons/fa";
-import "../Artist/ArtistDetail.css";
+import "../Album/AlbumDetail.css"
 
 const AlbumDetail = () => {
   const { albumName } = useParams();
