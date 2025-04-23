@@ -42,4 +42,38 @@ router.patch("/update", authenticate, async (req, res) => {
   }
 });
 
+// GET /api/users/theme - Get user theme and accent
+router.get("/theme", authenticate, async (req, res) => {
+  try {
+    const user = await User.findById(req.userId).select("theme accent");
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    // Return both theme and accent
+    res.json({ theme: user.theme, accent: user.accent });
+  } catch (err) {
+    console.error("Error fetching user theme:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// PATCH /api/users/theme - Update user theme and accent
+router.patch("/theme", authenticate, async (req, res) => {
+  try {
+    const userId = req.userId;
+    const { theme, accent } = req.body; // Expect theme and accent in the request body
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { theme, accent },
+      { new: true }
+    );
+
+    // Return the updated theme and accent
+    res.json({ theme: updatedUser.theme, accent: updatedUser.accent });
+  } catch (err) {
+    console.error("Error updating user theme:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
 module.exports = router;

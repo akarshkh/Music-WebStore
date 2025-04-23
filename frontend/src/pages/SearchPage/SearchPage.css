@@ -5,6 +5,11 @@
   background-color: var(--primary-bg);
   color: var(--font-color);
 }
+
+.search-page a {
+  color: white;
+}
+
 .search-input {
   padding: 20px;
   width: 1200px;
@@ -26,9 +31,9 @@
 
 .song-card {
   background: var(--primary-accent);
-  border-radius: 1rem;
+  border-radius: .5rem;
   padding: 1rem;
-  text-align: center;
+  text-align: left;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -42,21 +47,40 @@
   background: var(--secondary-accent);
 }
 
-.cover-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+/* Cover container that forces a square shape */
+.cover {
+  width: 40px;
+  padding-bottom: 40px; /* Ensures aspect ratio 1:1 */
+  position: relative;
+  overflow: hidden;
   border-radius: 0.75rem;
+  flex-shrink: 0;
 }
 
+/* Cover image that will take full width and height of the square */
+.cover-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Makes sure the image maintains aspect ratio and fills the container */
+}
+
+/* Placeholder for missing images */
 .cover-placeholder {
-  height: 180px;
+  height: 100%;
   background: gray;
   color: white;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 0.75rem;
+}
+
+
+.song-info {
+  margin-bottom: 1.5rem;
 }
 
 .song-info h3 {
@@ -67,42 +91,41 @@
 .song-info p {
   font-size: 0.9rem;
   color: white;
-  transition: opacity 0.3s ease-in-out;
-  opacity: 1;
   margin: 0.2rem 0;
 }
 
-.song-info .hover-info {
-  opacity: 0;
-}
-
-.song-card:hover .hover-info {
-  opacity: 1;
-}
-
-.song-info audio {
-  width: 100%;
-  margin-top: 1rem;
-}
-
-.add-button {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 1.2rem;
-  background-color: #28a745;
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  cursor: pointer;
-  z-index: 1;
+.song-actions {
   display: flex;
-  align-items: center;
   justify-content: center;
+  gap: 8rem;
+  margin: 0;
+  padding: 0;
 }
 
-.add-button:hover {
-  background-color: #218838;
+.like-button, .play-button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  color: white !important;
+}
+
+.song-info .album,
+.song-info .genre {
+  font-size: 0.9rem;
+  color: white;
+  margin: 0.2rem 0;
+}
+
+.song-info p:last-child {
+  margin-bottom: 1rem;
+}
+
+.genre {
+  font-size: 0.9rem;
+  color: white;
+  margin: 0.2rem 0;
+  cursor: pointer;
+  text-decoration: underline;
 }

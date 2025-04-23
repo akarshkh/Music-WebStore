@@ -29,9 +29,16 @@ const ThemeSwitcher = ({ user }) => {
                     });
 
                     if (res.ok) {
-                        const data = await res.json();
-                        theme = data.theme || DEFAULT_THEME;
-                        savedAccent = data.accent || DEFAULT_ACCENT;
+                        const text = await res.text(); // Get the response as text first
+                        if (text) {
+                            const data = JSON.parse(text);  // Manually parse JSON
+                            theme = data.theme || DEFAULT_THEME;
+                            savedAccent = data.accent || DEFAULT_ACCENT;
+                        } else {
+                            console.error("Empty response received.");
+                        }
+                    } else {
+                        console.error("Failed to fetch theme:", res.status);
                     }
                 } else {
                     const localTheme = localStorage.getItem("theme");

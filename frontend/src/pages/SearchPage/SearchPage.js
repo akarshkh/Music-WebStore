@@ -2,13 +2,14 @@ import React, { useEffect, useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import "./SearchPage.css";
 import { MediaPlayerContext } from "../../context/MediaPlayerContext";
+import { FaHeart, FaPlay, FaPause } from "react-icons/fa"; // Add Pause icon
 
 const SearchPage = () => {
   const [songs, setSongs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
   const [error, setError] = useState(null);
-  const { playSong } = useContext(MediaPlayerContext);
+  const { playSong, currentSong, isPlaying, togglePlayPause } = useContext(MediaPlayerContext);
 
   useEffect(() => {
     const fetchSongs = async () => {
@@ -34,23 +35,25 @@ const SearchPage = () => {
     return () => clearTimeout(debounce);
   }, [query]);
 
-  const addToPlaylist = async (songId) => {
-    try {
-      const response = await fetch("http://localhost:5000/api/playlist/add", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ songId }),
-      });
+  const handleLikeClick = (e, songId) => {
+    e.stopPropagation();
+    alert("Liked song: " + songId);
+  };
 
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || "Failed to add to playlist");
-      alert("Song added to playlist!");
-    } catch (err) {
-      console.error(err);
-      alert("Error adding song to playlist.");
+  const handlePlayPause = (e, song) => {
+    e.stopPropagation();
+    if (currentSong?._id === song._id) {
+      // Toggle play/pause if the song is already the current song
+      togglePlayPause();
+    } else {
+      // Play the song if it's not the current song
+      playSong(song);
     }
+  };
+
+  // Handle genre click to update search query
+  const handleGenreClick = (genre) => {
+    setQuery(genre); // Update search query with the clicked genre
   };
 
   return (
@@ -69,7 +72,7 @@ const SearchPage = () => {
 
       {!loading && !error && (
         <h2 className="song-section-title">
-          {query.trim() ? `Search Results for "${query.trim()}"` : "Latest Songs"}
+          {query.trim() ? `Search Results for "${query.trim()}"` : "All Songs"}
         </h2>
       )}
 
@@ -82,20 +85,7 @@ const SearchPage = () => {
       ) : (
         <div className="song-grid">
           {songs.map((song) => (
-            <div
-              key={song._id}
-              className="song-card"
-              onClick={() => playSong(song)}
-            >
-              <button
-                className="add-button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  addToPlaylist(song._id);
-                }}
-              >
-                +
-              </button>
+            <div key={song._id} className="song-card">
               <div className="cover">
                 {song.coverImage ? (
                   <img
@@ -107,16 +97,40 @@ const SearchPage = () => {
                   <div className="cover-placeholder">🎵</div>
                 )}
               </div>
+
               <div className="song-info">
+                <div className="song-actions">
+                  <button
+                    className="like-button"
+                    onClick={(e) => handleLikeClick(e, song._id)}
+                  >
+                    <FaHeart />
+                  </button>
+                  <button
+                    className="play-button"
+                    onClick={(e) => handlePlayPause(e, song)} // Use handlePlayPause for play/pause
+                  >
+                    {currentSong?._id === song._id && isPlaying ? <FaPause /> : <FaPlay />}
+                  </button>
+                </div>
+
                 <h3>{song.songTitle}</h3>
+
                 <p className="artist">
-                  Artist:{" "}
                   <Link to={`/artist/${song.songArtist}`} className="artist-link">
                     {song.songArtist}
                   </Link>
                 </p>
-                <p className="hover-info">Album: {song.album}</p>
-                <p className="hover-info">Genre: {song.genre}</p>
+                <br />
+                <p className="album">{song.album}</p>
+                
+                {/* Add genre as clickable */}
+                <p 
+                  className="genre"
+                  onClick={() => handleGenreClick(song.genre)} // Clickable genre
+                >
+                  #{song.genre}
+                </p>
               </div>
             </div>
           ))}
@@ -127,3 +141,4 @@ const SearchPage = () => {
 };
 
 export default SearchPage;
+  

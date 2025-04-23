@@ -77,15 +77,21 @@ const NavBar = () => {
     const token = localStorage.getItem("accessToken");
     if (token) {
       try {
-        await fetch("http://localhost:5000/api/auth/logout", {
+        const response = await fetch("http://localhost:5000/api/auth/logout", {
           method: "POST",
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ refreshToken: token }), // Send the token in the body as refreshToken
         });
+
+        if (!response.ok) {
+          console.error("Logout failed:", response);
+        }
       } catch (error) {
         console.error("Logout error:", error);
       }
     }
 
+    // Clean up local storage and reset user state
     localStorage.removeItem("accessToken");
     localStorage.removeItem("username");
     localStorage.removeItem("email");

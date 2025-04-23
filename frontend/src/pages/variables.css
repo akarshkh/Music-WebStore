@@ -67,7 +67,7 @@
 /* Dark Mode - Blue */
 [data-theme="dark"][data-accent="accent1"] {
     --primary-bg: #222;
-    --secondary-bg: #404040;
+    --secondary-bg: #2e294d;
     --font-color: #ffffff;
     --font-color-compliment: #222;
     --primary-accent: #1e90ff;
