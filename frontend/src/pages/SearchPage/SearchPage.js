@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import "./SearchPage.css";
 import { MediaPlayerContext } from "../../context/MediaPlayerContext";
-import { FaHeart, FaPlay, FaPause } from "react-icons/fa"; // Add Pause icon
+import { FaHeart, FaPlay, FaPause } from "react-icons/fa";
 
 const SearchPage = () => {
   const [songs, setSongs] = useState([]);
@@ -43,17 +43,14 @@ const SearchPage = () => {
   const handlePlayPause = (e, song) => {
     e.stopPropagation();
     if (currentSong?._id === song._id) {
-      // Toggle play/pause if the song is already the current song
       togglePlayPause();
     } else {
-      // Play the song if it's not the current song
       playSong(song);
     }
   };
 
-  // Handle genre click to update search query
   const handleGenreClick = (genre) => {
-    setQuery(genre); // Update search query with the clicked genre
+    setQuery(genre);
   };
 
   return (
@@ -108,7 +105,7 @@ const SearchPage = () => {
                   </button>
                   <button
                     className="play-button"
-                    onClick={(e) => handlePlayPause(e, song)} // Use handlePlayPause for play/pause
+                    onClick={(e) => handlePlayPause(e, song)}
                   >
                     {currentSong?._id === song._id && isPlaying ? <FaPause /> : <FaPlay />}
                   </button>
@@ -122,12 +119,15 @@ const SearchPage = () => {
                   </Link>
                 </p>
                 <br />
-                <p className="album">{song.album}</p>
-                
-                {/* Add genre as clickable */}
-                <p 
+                <p className="album">
+                  <Link to={`/album/${song.album}`} className="album-link">
+                    {song.album}
+                  </Link>
+                </p>
+
+                <p
                   className="genre"
-                  onClick={() => handleGenreClick(song.genre)} // Clickable genre
+                  onClick={() => handleGenreClick(song.genre)}
                 >
                   #{song.genre}
                 </p>
@@ -141,4 +141,3 @@ const SearchPage = () => {
 };
 
 export default SearchPage;
-  

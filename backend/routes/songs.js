@@ -34,4 +34,26 @@ router.get("/search", async (req, res) => {
   }
 });
 
+// ✅ Get all songs in an album
+router.get("/albums/:albumName", async (req, res) => {
+  try {
+    const albumName = decodeURIComponent(req.params.albumName);
+    const songs = await Song.find({ album: albumName });
+    res.status(200).json(songs);
+  } catch (err) {
+    console.error("❌ Error fetching songs for album:", err);
+    res.status(500).json({ message: "Failed to fetch songs", error: err.message });
+  }
+});
+// ✅ Get all unique album names
+router.get("/albums", async (req, res) => {
+  try {
+    const albums = await Song.distinct("album");
+    res.json(albums);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch albums." });
+  }
+});
+
+
 module.exports = router;

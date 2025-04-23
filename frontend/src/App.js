@@ -18,13 +18,17 @@ import Settings from "./pages/Settings/Settings";
 import UploadSong from "./pages/UploadSong/UploadSong";
 import Playlists from "./pages/Playlists/Playlists";
 import SearchPage from "./pages/SearchPage/SearchPage";
-import ArtistList from "./pages/Artist/ArtistList";        // ✅ Updated path
-import ArtistDetail from "./pages/Artist/ArtistDetail";    // ✅ Updated path
+import ArtistList from "./pages/Artist/ArtistList";
+import ArtistDetail from "./pages/Artist/ArtistDetail";
+
+// ✅ Album pages
+import AlbumList from "./pages/Album/AlbumList";
+import AlbumDetail from "./pages/Album/AlbumDetail";
 
 // Context
 import { MediaPlayerProvider } from "./context/MediaPlayerContext";
 
-// Helper for dynamic title updates
+// Dynamic title updater
 const PageTitleUpdater = () => {
   const location = useLocation();
 
@@ -36,10 +40,15 @@ const PageTitleUpdater = () => {
       "/playlist": `Playlists | ${PROJECT_NAME}`,
       "/search": `Search | ${PROJECT_NAME}`,
       "/artists": `Artists | ${PROJECT_NAME}`,
+      "/albums": `Albums | ${PROJECT_NAME}`,
     };
+
     if (location.pathname.startsWith("/artist/")) {
-      const artistName = location.pathname.split('/')[2];  // Extract artist name
+      const artistName = decodeURIComponent(location.pathname.split("/")[2]);
       document.title = `Artist: ${artistName} | ${PROJECT_NAME}`;
+    } else if (location.pathname.startsWith("/album/")) {
+      const albumName = decodeURIComponent(location.pathname.split("/")[2]);
+      document.title = `Album: ${albumName} | ${PROJECT_NAME}`;
     } else {
       document.title = titles[location.pathname] || PROJECT_NAME;
     }
@@ -77,7 +86,7 @@ function App() {
       } else {
         await tryRefreshToken();
       }
-    } catch (error) {
+    } catch {
       await tryRefreshToken();
     } finally {
       setIsCheckingLogin(false);
@@ -109,7 +118,7 @@ function App() {
       } else {
         handleLogout();
       }
-    } catch (error) {
+    } catch {
       handleLogout();
     }
   };
@@ -148,9 +157,7 @@ function App() {
     setUser(null);
   };
 
-  if (isCheckingLogin) {
-    return <div>Loading...</div>;
-  }
+  if (isCheckingLogin) return <div>Loading...</div>;
 
   return (
     <MediaPlayerProvider>
@@ -166,7 +173,11 @@ function App() {
 
         {/* ✅ Artist routes */}
         <Route path="/artists" element={<ArtistList />} />
-        <Route path="/artist/:name" element={<ArtistDetail />} />  {/* Artist details route */}
+        <Route path="/artist/:name" element={<ArtistDetail />} />
+
+        {/* ✅ Album routes */}
+        <Route path="/albums" element={<AlbumList />} />
+        <Route path="/album/:albumName" element={<AlbumDetail />} />
       </Routes>
 
       <Footer />

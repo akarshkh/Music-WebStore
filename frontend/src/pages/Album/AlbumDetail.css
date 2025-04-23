@@ -1,9 +1,8 @@
-/* Import global styles */
 @import url("../variables.css");
 
-/* AlbumPage Container */
 .album-page-container {
   min-height: 77vh;
+  padding-top: 100px;
   background-color: var(--primary-bg);
   color: var(--text-color);
   display: flex;
@@ -12,7 +11,6 @@
   padding-bottom: 70px;
 }
 
-/* Songs Container */
 .songs-container {
   max-width: 1200px;
   width: 100%;
@@ -57,7 +55,6 @@
   font-size: 16px;
 }
 
-/* Song List */
 .song-list {
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 12px;
@@ -110,23 +107,12 @@
   color: var(--font-color);
 }
 
-/* Prevent transition on album/genre/buttons */
-.song-genre,
-.song-genre span,
-.song-artist,
-.song-actions,
-.song-actions * {
-  transition: none !important;
-  will-change: auto;
-}
-
 .song-actions {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-/* Like & Play Buttons Shared Styles */
 .like-button,
 .play-button {
   background: none;
@@ -144,7 +130,6 @@
   color: var(--primary-accent);
 }
 
-/* Media Queries */
 @media (max-width: 768px) {
   .songs-container {
     padding: 20px;
