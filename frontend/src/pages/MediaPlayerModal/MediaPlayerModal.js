@@ -7,8 +7,9 @@ import {
   faStepBackward,
   faStepForward,
   faRedo,
-  faHeart,
   faMusic,
+  faVolumeUp,
+  faVolumeMute,
 } from "@fortawesome/free-solid-svg-icons";
 import "./MediaPlayerModal.css";
 import { MediaPlayerContext } from "../../context/MediaPlayerContext";
@@ -25,6 +26,8 @@ const MediaPlayerModal = () => {
 
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [volume, setVolume] = useState(0.5);
+  const [isMuted, setIsMuted] = useState(false); // Mute state
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -38,27 +41,34 @@ const MediaPlayerModal = () => {
       }
     };
 
+    audio.volume = isMuted ? 0 : volume; // Check mute state
     audio.addEventListener("timeupdate", updateTime);
     audio.addEventListener("loadedmetadata", updateDuration);
     audio.addEventListener("canplaythrough", updateDuration);
-
-    audio.load();
-
-    if (!isNaN(audio.duration)) {
-      setDuration(audio.duration);
-    }
 
     return () => {
       audio.removeEventListener("timeupdate", updateTime);
       audio.removeEventListener("loadedmetadata", updateDuration);
       audio.removeEventListener("canplaythrough", updateDuration);
     };
-  }, [audioRef, currentSong]);
+  }, [audioRef, currentSong, volume, isMuted]); // Added isMuted
 
   const handleSeek = (e) => {
     const newTime = parseFloat(e.target.value);
     seekTo(newTime);
     setCurrentTime(newTime);
+  };
+
+  const handleVolumeChange = (e) => {
+    const newVolume = parseFloat(e.target.value);
+    setVolume(newVolume);
+    if (!isMuted && audioRef.current) {
+      audioRef.current.volume = newVolume;
+    }
+  };
+
+  const toggleMute = () => {
+    setIsMuted((prevMuteState) => !prevMuteState); // Toggle mute state
   };
 
   const formatTime = (time) => {
@@ -110,12 +120,34 @@ const MediaPlayerModal = () => {
           )}
 
           <div className="mm-media-info">
-            <div className="mm-song-title-heart">
+            <div className="mm-inline-layout">
+              {/* Left aligned song title taking 60% */}
               <div className="mm-song-title">{currentSong?.songTitle || "No Song Selected"}</div>
-              <LikeButton
-                songId={currentSong?._id}
-                onLikeChange={(liked) => console.log("Liked changed:", liked)}
+
+              {/* Volume slider taking 30% */}
+              <input
+                type="range"
+                className="mm-volume-slider"
+                min="0"
+                max="1"
+                step="0.01"
+                value={volume}
+                onChange={handleVolumeChange}
+                title="Volume"
               />
+
+              {/* Mute button */}
+              <button className="mm-mute-btn" onClick={toggleMute}>
+                <FontAwesomeIcon icon={isMuted ? faVolumeMute : faVolumeUp} />
+              </button>
+
+              {/* Like button */}
+                <div  className="mm-mute-btn">
+                <LikeButton
+                  songId={currentSong?._id}
+                  onLikeChange={(liked) => console.log("Liked changed:", liked)}
+                />
+              </div>
             </div>
 
             <div className="mm-artist-album-duration">
