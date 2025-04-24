@@ -66,45 +66,44 @@ const SearchPage = () => {
       {loading ? (
         <p>Loading...</p>
       ) : error ? (
-        <p className="error">{error}</p>
+        <p className="search-error">{error}</p>
       ) : (
-        <div className="song-grid">
+        <div className="search-song-grid">
           {songs.map((song) => (
-            <div key={song._id} className="song-card">
-              <div className="cover">
+            <div key={song._id} className="search-song-card">
+              <div className="search-cover">
                 {song.coverImage ? (
                   <img
                     src={`http://localhost:5000/api/upload/files/${song.coverImage}`}
                     alt={song.songTitle}
-                    className="cover-image"
+                    className="search-cover-image"
                   />
                 ) : (
-                  <div className="cover-placeholder">🎵</div>
+                  <div className="search-cover-placeholder">🎵</div>
                 )}
               </div>
 
-              <div className="song-info">
-                <div className="song-actions">
+              <div className="search-song-info">
+                <div className="search-song-actions">
                   <LikeButton songId={song._id} />
-                  <button className="play-button" onClick={(e) => handlePlayPause(e, song)}>
+                  <button className="search-play-button" onClick={(e) => handlePlayPause(e, song)}>
                     {currentSong?._id === song._id && isPlaying ? <FaPause /> : <FaPlay />}
                   </button>
                 </div>
 
                 <h3>{song.songTitle}</h3>
-                <p className="artist">
-                  <Link to={`/artist/${song.songArtist}`} className="artist-link">
+                <p className="search-artist">
+                  <Link to={`/artist/${song.songArtist}`} className="search-artist-link">
                     {song.songArtist}
                   </Link>
                 </p>
-                <br />
-                <p className="album">
-                  <Link to={`/album/${song.album}`} className="album-link">
+                <p className="search-album">
+                  <Link to={`/album/${song.album}`} className="search-album-link">
                     {song.album}
                   </Link>
                 </p>
-
-                <p className="genre" onClick={() => handleGenreClick(song.genre)}>
+                <br />
+                <p className="search-genre" onClick={() => handleGenreClick(song.genre)}>
                   #{song.genre}
                 </p>
               </div>
@@ -112,6 +111,9 @@ const SearchPage = () => {
           ))}
         </div>
       )}
+
+      {/* Add a spacer here */}
+      <div style={{ height: "1px" }}></div>
     </div>
   );
 };

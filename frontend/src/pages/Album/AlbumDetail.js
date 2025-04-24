@@ -2,7 +2,8 @@ import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { MediaPlayerContext } from "../../context/MediaPlayerContext";
 import { FaHeart, FaPlay, FaPause } from "react-icons/fa";
-import "../Album/AlbumDetail.css"
+import "../Album/AlbumDetail.css";
+import LikeButton from "../../pages/LikeButton/LikeButton";
 
 const AlbumDetail = () => {
   const { albumName } = useParams();
@@ -75,16 +76,11 @@ const AlbumDetail = () => {
                 <div className="song-title">{song.songTitle}</div>
                 <div className="song-artist">{song.songArtist}</div>
                 <div className="song-actions">
-                  <button
-                    className="like-button"
-                    onClick={(e) => handleLikeClick(e, song._id)}
-                  >
-                    <FaHeart />
-                  </button>
+                  <LikeButton songId={song._id} />
                 </div>
                 <div className="song-actions">
                   <button
-                    className="play-button"
+                    className="song-action-button"
                     onClick={(e) => handlePlayPause(e, song)}
                   >
                     {currentSong?._id === song._id && isPlaying ? <FaPause /> : <FaPlay />}

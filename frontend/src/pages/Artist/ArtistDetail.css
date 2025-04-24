@@ -1,6 +1,3 @@
-/* ArtistDetail.css */
-@import url("../variables.css"); /* Import global styles */
-
 /* ArtistPage Container */
 .artist-page-container {
   min-height: 77vh;
@@ -8,7 +5,7 @@
   color: var(--text-color);
   display: flex;
   flex-direction: column;
-  padding-top: 100px;
+  padding-top: 120px;
   padding-bottom: 70px;
 }
 
@@ -72,6 +69,7 @@
   padding: 16px 20px;
   border-bottom: 1px solid var(--primary-accent);
   transition: background-color 0.2s ease;
+  position: relative;
 }
 
 .song-row:last-child {
@@ -111,31 +109,16 @@
 
 .song-album {
   text-align: left;
-  font-size: 14px;
+  font-size: 16px;
   color: var(--font-color);
 }
 
-/* Prevent transition on album/genre/buttons */
-.song-genre,
-.song-genre span,
+/* Prevent transition on album/buttons */
 .song-album,
 .song-actions,
 .song-actions * {
   transition: none !important;
   will-change: auto;
-}
-
-.song-genre {
-  text-align: center;
-}
-
-.song-genre span {
-  color: var(--primary-accent);
-  font-weight: bold;
-  font-size: 12px;
-  padding: 4px 12px;
-  border-radius: 12px;
-  display: inline-block;
 }
 
 .song-actions {
@@ -152,7 +135,9 @@
   font-size: 16px;
   cursor: pointer;
   color: var(--font-color);
-  padding: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .like-button:hover,
@@ -160,6 +145,11 @@
 .play-button:hover,
 .play-button:active {
   color: var(--primary-accent);
+}
+
+.play-button:hover,
+.play-button:active {
+  background-color: var(--hover-bg);
 }
 
 /* Media Queries */
@@ -172,8 +162,34 @@
     grid-template-columns: 40px 1fr 1fr 40px 40px;
     padding: 12px 15px;
   }
+}
 
-  .song-genre {
-    display: none;
-  }
+/* Play Icon Positioning */
+.song-thumbnail {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  position: relative;
+}
+
+.play-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  /* transition: transform 0.2s ease, background-color 0.3s ease; */
+  cursor: pointer;
+  height: 30px;
+  width: 30px;
+}
+
+.play-icon:hover {
+  transform: scale(1.3);
+}
+
+.play-icon svg {
+  color: var(--font-color);
+  padding-top: 2px;
+  font-size: 16px;
 }

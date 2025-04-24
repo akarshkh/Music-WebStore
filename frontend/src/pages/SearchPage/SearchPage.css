@@ -1,5 +1,5 @@
 .search-page {
-  margin-top: 70px;
+  margin-top: 100px;
   height: 77vh;
   padding: 2rem;
   background-color: var(--primary-bg);
@@ -22,53 +22,51 @@
   display: block;
 }
 
-.song-grid {
+.search-song-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 2rem;
+  row-gap: 5rem;
   margin-top: 2rem;
+  margin-bottom: 200px;
 }
 
-.song-card {
+.search-song-card {
   background: var(--primary-accent);
   border-radius: .5rem;
   padding: 1rem;
   text-align: left;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start; /* Align items to the top */
   height: 100%;
-  transition: transform 0.2s, background 0.3s;
   position: relative;
+  transition: background 0.3s;
 }
 
-.song-card:hover {
-  transform: scale(1.03);
+.search-song-card:hover {
   background: var(--secondary-accent);
 }
 
-/* Cover container that forces a square shape */
-.cover {
-  width: 40px;
-  padding-bottom: 40px; /* Ensures aspect ratio 1:1 */
+.search-cover {
+  width: 200px;
+  padding-bottom: 200px;
   position: relative;
   overflow: hidden;
   border-radius: 0.75rem;
   flex-shrink: 0;
 }
 
-/* Cover image that will take full width and height of the square */
-.cover-image {
+.search-cover-image {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Makes sure the image maintains aspect ratio and fills the container */
+  object-fit: cover;
 }
 
-/* Placeholder for missing images */
-.cover-placeholder {
+.search-cover-placeholder {
   height: 100%;
   background: gray;
   color: white;
@@ -78,54 +76,70 @@
   border-radius: 0.75rem;
 }
 
-
-.song-info {
-  margin-bottom: 1.5rem;
-}
-
-.song-info h3 {
+.search-song-info h3 {
   color: white;
   margin: 0.5rem 0 0.25rem;
-}
-
-.song-info p {
-  font-size: 0.9rem;
-  color: white;
-  margin: 0.2rem 0;
-}
-
-.song-actions {
-  display: flex;
-  justify-content: center;
-  gap: 8rem;
-  margin: 0;
-  padding: 0;
-}
-
-.like-button, .play-button {
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-  padding: 0.5rem;
-  color: white !important;
-}
-
-.song-info .album,
-.song-info .genre {
-  font-size: 0.9rem;
-  color: white;
-  margin: 0.2rem 0;
-}
-
-.song-info p:last-child {
   margin-bottom: 1rem;
 }
 
-.genre {
+.search-song-info p {
+  font-size: 0.9rem;
+  color: white;
+  margin: 0rem 0;
+}
+
+.search-song-actions {
+  display: flex;
+  justify-content: flex-start; /* Align buttons to the left */
+  gap: 8rem; /* Keep horizontal gap of 8rem */
+  margin: 0;
+  padding: 0;
+  margin-top: 30px;
+  width: 100%; /* Prevent shrinking */
+}
+
+.search-like-button,
+.search-play-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  color: white !important; /* Let other styles control the color */
+  display: inline-flex; /* Prevent layout issues */
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s, font-size 0.2s;
+  font-size: 1rem; /* Set a default font size */
+  width: 40px;  /* Set a fixed width for the buttons */
+  height: 40px; /* Set a fixed height for the buttons */
+  border-radius: 50%; /* Circular button */
+  overflow: hidden; /* Ensure no content overflows */
+}
+
+.search-like-button:hover,
+.search-play-button:hover {
+  font-size: 1.3rem; /* Increase size slightly on hover */
+  transform: scale(1.1); /* Apply scale effect visually without affecting layout */
+}
+
+.search-like-button:active,
+.search-play-button:active {
+  color: var(--secondary-bg) !important;
+  transform: scale(0.9); /* Shrink momentarily on click */
+}
+
+.search-album,
+.search-genre {
   font-size: 0.9rem;
   color: white;
   margin: 0.2rem 0;
+}
+
+.search-genre {
   cursor: pointer;
   text-decoration: underline;
+}
+
+.search-error {
+  color: red;
 }

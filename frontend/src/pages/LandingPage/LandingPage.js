@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./LandingPage.css";
 import { PROJECT_NAME } from "../../config";
-import LoginModal from "../../pages/LoginModal/LoginModal"; // Import LoginModal
+import LoginModal from "../../pages/LoginModal/LoginModal";
 import { useNavigate } from "react-router-dom";
 
 const LandingPage = ({ user }) => {
@@ -10,26 +10,22 @@ const LandingPage = ({ user }) => {
   const [randomArtist, setRandomArtist] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isLoginOpen, setIsLoginOpen] = useState(false); // State to manage LoginModal visibility
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
   const navigate = useNavigate();
 
-  // Fetch songs and artists
   useEffect(() => {
     const fetchSongsAndArtists = async () => {
       try {
-        // Fetch songs
         const songResponse = await fetch("http://localhost:5000/api/songs/songs");
         if (!songResponse.ok) throw new Error("Failed to fetch songs.");
         const songData = await songResponse.json();
         setSongs(songData);
 
-        // Fetch artists
         const artistResponse = await fetch("http://localhost:5000/api/artists");
         if (!artistResponse.ok) throw new Error("Failed to fetch artists.");
         const artistData = await artistResponse.json();
         setArtists(artistData);
 
-        // Random artist selection
         if (artistData.length > 0) {
           const random = artistData[Math.floor(Math.random() * artistData.length)];
           setRandomArtist(random);
@@ -44,7 +40,6 @@ const LandingPage = ({ user }) => {
     fetchSongsAndArtists();
   }, []);
 
-  // Filter songs by the selected random artist
   const filteredSongs = songs.filter(
     (song) =>
       song.songArtist && song.songArtist.toLowerCase() === randomArtist?.toLowerCase()
@@ -52,61 +47,55 @@ const LandingPage = ({ user }) => {
 
   const handleCtaClick = () => {
     if (user) {
-      // If user is logged in, navigate to the Search Page
       navigate("/search");
     } else {
-      // If user is not logged in, open the login modal
       setIsLoginOpen(true);
     }
   };
 
   return (
-    <div className="landing-page-wrapper">
-      {/* Hero Section (Left Column with CTA) */}
-      <section className="hero-left-section">
-        <div className="hero-text-box">
+    <div className="lp-wrapper">
+      <section className="lp-hero-left">
+        <div className="lp-hero-text-box">
           <h1>Welcome to {PROJECT_NAME}</h1>
           <p>Discover and explore your favorite music.</p>
-          {/* CTA Button to open Login Modal or navigate to Search Page */}
           <a
             href="#"
-            className="call-to-action-button"
+            className="lp-cta-button"
             onClick={(e) => {
               e.preventDefault();
-              handleCtaClick();  // Open Login Modal or navigate based on login status
+              handleCtaClick();
             }}
           >
-            {user ? "Browse Music" : "Get Started"}
+            {user ? "Browse Music" : "Sign Up Now!"}
           </a>
         </div>
       </section>
 
-      {/* Right Column */}
-      <section className="right-column">
-        {/* Latest Hits Section */}
-        <div className="latest-hits-section">
+      <section className="lp-right-column">
+        <div className="lp-latest-hits">
           <h2>Check out our latest hits</h2>
           {loading ? (
             <p>Loading...</p>
           ) : error ? (
-            <p className="error">{error}</p>
+            <p className="lp-error">{error}</p>
           ) : (
-            <div className="song-cards-grid">
+            <div className="lp-song-grid">
               {songs.slice(0, 4).map((song) => (
-                <div key={song._id} className="song-card-container">
-                  <div className="cover-image-container">
+                <div key={song._id} className="lp-song-card">
+                  <div className="lp-cover-image-container">
                     {song.coverImage ? (
                       <img
                         src={`http://localhost:5000/api/upload/files/${song.coverImage}`}
                         alt={song.songTitle}
-                        className="cover-image"
+                        className="lp-cover-image"
                       />
                     ) : (
-                      <div className="cover-placeholder">🎵</div>
+                      <div className="lp-cover-placeholder">🎵</div>
                     )}
                   </div>
-                  <div className="song-info">
-                    <h3 className="song-card-title">{song.songTitle}</h3>
+                  <div className="lp-song-info">
+                    <h3 className="lp-song-title">{song.songTitle}</h3>
                   </div>
                 </div>
               ))}
@@ -114,32 +103,31 @@ const LandingPage = ({ user }) => {
           )}
         </div>
 
-        {/* Songs by Random Artist Section */}
-        <div className="random-artist-section">
+        <div className="lp-random-artist">
           <h2>Songs by {randomArtist || "Random Artist"}</h2>
           {loading ? (
             <p>Loading...</p>
           ) : error ? (
-            <p className="error">{error}</p>
+            <p className="lp-error">{error}</p>
           ) : filteredSongs.length === 0 ? (
             <p>No songs found for the selected artist: {randomArtist}</p>
           ) : (
-            <div className="song-cards-grid">
+            <div className="lp-song-grid">
               {filteredSongs.slice(0, 4).map((song) => (
-                <div key={song._id} className="song-card-container">
-                  <div className="cover-image-container">
+                <div key={song._id} className="lp-song-card">
+                  <div className="lp-cover-image-container">
                     {song.coverImage ? (
                       <img
                         src={`http://localhost:5000/api/upload/files/${song.coverImage}`}
                         alt={song.songTitle}
-                        className="cover-image"
+                        className="lp-cover-image"
                       />
                     ) : (
-                      <div className="cover-placeholder">🎵</div>
+                      <div className="lp-cover-placeholder">🎵</div>
                     )}
                   </div>
-                  <div className="song-info">
-                    <h3 className="song-card-title">{song.songTitle}</h3>
+                  <div className="lp-song-info">
+                    <h3 className="lp-song-title">{song.songTitle}</h3>
                   </div>
                 </div>
               ))}
@@ -148,14 +136,13 @@ const LandingPage = ({ user }) => {
         </div>
       </section>
 
-      {/* Login Modal */}
       {isLoginOpen && (
         <LoginModal
           isOpen={isLoginOpen}
-          onClose={() => setIsLoginOpen(false)}  // Function to close modal
+          onClose={() => setIsLoginOpen(false)}
           onLoginSuccess={(userData) => {
             console.log("User logged in:", userData);
-            setIsLoginOpen(false);  // Close modal on login success
+            setIsLoginOpen(false);
           }}
         />
       )}

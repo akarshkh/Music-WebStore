@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
-import { FaGoogle, FaTwitter, FaFacebook } from "react-icons/fa";
 import "./LoginModal.css";
 
 const SITE_KEY = "6LcfXQIrAAAAAA68SEFqOqX6naSN8RgBm36qf5Du";
@@ -40,7 +39,6 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Remove this code to enforce the captcha functionality
         if (window.location.hostname !== "localhost" && !captchaValue) {
             alert("Please complete the CAPTCHA.");
             return;
@@ -69,41 +67,31 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
             const data = await response.json();
 
             if (!response.ok) {
-                console.error("Error response:", data);
                 alert("Login failed: " + (data.message || "Unknown error"));
                 return;
             }
 
             if (!isRegistering) {
-                // ✅ Store user info in localStorage
                 localStorage.setItem("accessToken", data.accessToken);
                 localStorage.setItem("refreshToken", data.refreshToken);
                 localStorage.setItem("username", data.username);
                 localStorage.setItem("email", data.email);
                 localStorage.setItem("profilePic", data.profilePic || "");
 
-                // ✅ Pass data to NavBar
                 onLoginSuccess({
                     username: data.username,
                     email: data.email,
                     profilePic: data.profilePic || null,
                 });
 
-                // Refresh the page after login success
-                window.location.reload(); // This will reload the entire page.
+                window.location.reload();
             } else {
                 alert("Registration successful! Please log in.");
                 setIsRegistering(false);
             }
         } catch (error) {
-            console.error("Error:", error);
             alert("Server error. Try again later.");
         }
-    };
-
-    const handleOAuthLogin = (provider, e) => {
-        e.preventDefault();
-        console.log(`${isRegistering ? "Registering" : "Logging in"} with ${provider}`);
     };
 
     return (
@@ -147,25 +135,11 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
                             required
                         />
                     )}
-
-                    {/* Social Login Section */}
-                    <div className="social-login">
-                        <span>{isRegistering ? "Or Register With" : "Or Login With"}</span>
-                        <div className="social-icons">
-                            <FaGoogle className="social-icon" onClick={(e) => handleOAuthLogin("Google", e)} />
-                            <FaTwitter className="social-icon" onClick={(e) => handleOAuthLogin("Twitter", e)} />
-                            <FaFacebook className="social-icon" onClick={(e) => handleOAuthLogin("Facebook", e)} />
-                        </div>
-                    </div>
-
-                    {/* reCAPTCHA */}
                     <div className="captcha-container">
                         <ReCAPTCHA sitekey={SITE_KEY} onChange={(value) => setCaptchaValue(value)} />
                     </div>
-
                     <button type="submit">{isRegistering ? "Register" : "Login"}</button>
                 </form>
-
                 <button type="button" onClick={() => setIsRegistering(!isRegistering)}>
                     {isRegistering ? "Already have an account? Login here" : "Don't have an account yet? Register here"}
                 </button>

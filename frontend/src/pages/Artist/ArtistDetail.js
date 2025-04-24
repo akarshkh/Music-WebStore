@@ -1,15 +1,13 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import "./ArtistDetail.css";
-import { FaHeart } from 'react-icons/fa';
-import { FaMusic } from 'react-icons/fa';
+import { FaHeart, FaMusic, FaPlay, FaPause } from "react-icons/fa";
 import { MediaPlayerContext } from "../../context/MediaPlayerContext";
-import { FaPlay, FaPause } from "react-icons/fa";
 import LikeButton from "../../pages/LikeButton/LikeButton";
 
 const ArtistDetail = () => {
   const { name } = useParams();
-  const { playSong, currentSong, isPlaying, togglePlayPause } = useContext(MediaPlayerContext); // Destructure context to get togglePlayPause
+  const { playSong, currentSong, isPlaying, togglePlayPause } = useContext(MediaPlayerContext);
   const [songs, setSongs] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -29,19 +27,11 @@ const ArtistDetail = () => {
 
   const handlePlayClick = (song) => {
     if (currentSong?._id === song._id) {
-      // If the clicked song is already playing, toggle play/pause
       togglePlayPause();
     } else {
-      playSong(song); // Play the selected song
+      playSong(song);
     }
   };
-
-  // If no song is playing, automatically play the first song when the page loads
-  useEffect(() => {
-    if (!currentSong && songs.length > 0) {
-      playSong(songs[0]); // Play the first song only if no song is playing
-    }
-  }, [songs, currentSong, playSong]);
 
   return (
     <div className="artist-page-container">
@@ -73,9 +63,7 @@ const ArtistDetail = () => {
                   <div className="song-title">{song.songTitle}</div>
                   <div className="song-album">{song.album || song.songTitle}</div>
                   <div className="song-actions">
-                    <button className="like-button">
-                      <FaHeart />
-                    </button>
+                    <LikeButton songId={song._id} />
                   </div>
                   <div
                     className="song-thumbnail"
