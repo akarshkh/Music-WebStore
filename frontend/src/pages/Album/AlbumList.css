@@ -1,0 +1,32 @@
+.album-list-container {
+  padding: 2rem;
+}
+
+.album-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.album-card {
+  background: #fff;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.album-card:hover {
+  transform: scale(1.05);
+}
+
+.album-thumbnail {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.album-name {
+  font-size: 1.2rem;
+  font-weight: bold;
+}

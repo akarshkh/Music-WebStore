@@ -1,9 +1,10 @@
+// backend/controller/userController.js
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 
-// 🔹 Function to generate tokens
+// Function to generate tokens
 const generateTokens = (userId) => {
     const accessToken = jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: "1h" }); // 1-hour session
     const refreshToken = crypto.randomBytes(64).toString('hex'); // Secure refresh token

@@ -1,123 +1,171 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "./Playlists.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { FaPlay, FaPause, FaTrash } from "react-icons/fa";
+import { MediaPlayerContext } from "../../context/MediaPlayerContext";
 
-const Playlists = () => {
-    const [playlists, setPlaylists] = useState([
-        { 
-            id: 1, 
-            name: "Chill Vibes", 
-            songs: 3, 
-            duration: "12 min", 
-            songList: [
-                { title: "Song A", artist: "Artist 1", album: "Album X", duration: "3:45", image: "https://picsum.photos/50/50?random=1" },
-                { title: "Song B", artist: "Artist 2", album: "Album Y", duration: "4:00", image: "https://picsum.photos/50/50?random=2" },
-                { title: "Song C", artist: "Artist 3", album: "Album Z", duration: "4:15", image: "https://picsum.photos/50/50?random=3" }
-            ]
+const Playlist = () => {
+  const [songs, setSongs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const { playSong, currentSong, isPlaying, togglePlayPause } = useContext(MediaPlayerContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchPlaylist = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        if (!token) throw new Error("No token found. Please log in.");
+
+        const response = await fetch("http://localhost:5000/api/playlists/favorites", {
+          method: "GET",
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!response.ok) throw new Error("Failed to fetch playlist.");
+        const data = await response.json();
+        setSongs(data);
+        setError(null);
+      } catch (err) {
+        console.error("Fetch error:", err);
+        setError("An error occurred while fetching the playlist. " + err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPlaylist();
+  }, []);
+
+  const handlePlayPause = (song) => {
+    if (currentSong?._id === song._id) {
+      togglePlayPause();
+    } else {
+      playSong(song);
+    }
+  };
+
+  const handleRemoveFromPlaylist = async (songId) => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) return alert("No token found. Please log in.");
+
+      const response = await fetch(`http://localhost:5000/api/playlists/favorites/${songId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
-        { 
-            id: 2, 
-            name: "Workout Mix", 
-            songs: 5, 
-            duration: "20 min", 
-            songList: [
-                { title: "Song D", artist: "Artist 4", album: "Album A", duration: "4:30", image: "https://picsum.photos/50/50?random=4" },
-                { title: "Song E", artist: "Artist 5", album: "Album B", duration: "3:50", image: "https://picsum.photos/50/50?random=5" }
-            ]
-        }
-    ]);
+      });
 
-    const [selectedPlaylist, setSelectedPlaylist] = useState(playlists[0]);
+      if (!response.ok) throw new Error("Failed to remove song from favorites.");
+      setSongs(songs.filter((song) => song._id !== songId));
+    } catch (err) {
+      console.error("Error removing from playlist:", err);
+      alert("Failed to remove song from playlist. " + err.message);
+    }
+  };
 
-    const handlePlaylistClick = (playlist) => {
-        setSelectedPlaylist(playlist);
-    };
+  const handleGenreClick = (genre) => {
+    navigate(`/search?q=${genre}`);
+  };
 
-    const deleteSong = (playlistId, songIndex) => {
-        setPlaylists(playlists.map(pl => 
-            pl.id === playlistId ? { 
-                ...pl, 
-                songs: pl.songs - 1, 
-                songList: pl.songList.filter((_, i) => i !== songIndex) 
-            } : pl
-        ));
-        if (selectedPlaylist.id === playlistId) {
-            setSelectedPlaylist({
-                ...selectedPlaylist,
-                songs: selectedPlaylist.songs - 1,
-                songList: selectedPlaylist.songList.filter((_, i) => i !== songIndex)
-            });
-        }
-    };
-
+  if (loading) {
     return (
-        <div className="playlists-page">
-            {/* Left Column - Playlist List */}
-            <div className="playlist-menu">
-                {playlists.map((playlist) => (
-                    <div 
-                        key={playlist.id} 
-                        className={`playlist-item ${selectedPlaylist.id === playlist.id ? "active" : ""}`} 
-                        onClick={() => handlePlaylistClick(playlist)}
-                    >
-                        <img src={`https://picsum.photos/100/100?random=${playlist.id}`} alt="Album Cover" className="playlist-cover" />
-                        <div className="playlist-info">
-                            <div className="playlist-name">{playlist.name}</div>
-                            <div className="playlist-details">{playlist.songs} songs • {playlist.duration}</div>
-                        </div>
-                    </div>
-                ))}
-            </div>
-
-            {/* Right Column - Playlist Details */}
-            {selectedPlaylist && (
-                <div className="playlist-content">
-                    <div className="playlist-header">
-                        <img src="https://picsum.photos/100/100?random=2" alt="Album Cover" className="playlist-image" />
-                        <div className="playlist-meta">
-                            <h2>{selectedPlaylist.name}</h2>
-                            <p>{selectedPlaylist.songs} songs • {selectedPlaylist.duration}</p>
-                        </div>
-                    </div>
-
-                    <div className="song-list">
-                        <div className="song-list-header">
-                            <span>Track</span>
-                            <span>Album</span>
-                            <span>Duration</span>
-                            <span>Actions</span>
-                        </div>
-                        {selectedPlaylist.songList.length > 0 ? (
-                            selectedPlaylist.songList.map((song, index) => (
-                                <div key={index} className="song-item">
-                                    <div className="song-info">
-                                        <img src={song.image} alt="Song Thumbnail" className="song-thumbnail" />
-                                        <div>
-                                            <span className="song-title">{song.title}</span>
-                                            <span className="song-artist">{song.artist}</span>
-                                        </div>
-                                    </div>
-                                    <span className="song-album">{song.album}</span>
-                                    <span className="song-duration">{song.duration}</span>
-                                    <div className="song-actions">
-                                        <button className="edit-song-btn">
-                                            <FontAwesomeIcon icon={faEdit} />
-                                        </button>
-                                        <button className="delete-song-btn" onClick={() => deleteSong(selectedPlaylist.id, index)}>
-                                            <FontAwesomeIcon icon={faTrash} />
-                                        </button>
-                                    </div>
-                                </div>
-                            ))
-                        ) : (
-                            <p className="empty-message">No songs added yet.</p>
-                        )}
-                    </div>
-                </div>
-            )}
-        </div>
+      <div className="liked-playlist-page">
+        <h2>Your Favorite Songs</h2>
+        <p>Loading your playlist...</p>
+      </div>
     );
+  }
+
+  if (error) {
+    return (
+      <div className="liked-playlist-page">
+        <h2>Your Favorite Songs</h2>
+        <p className="liked-error">{error}</p>
+        {!localStorage.getItem("accessToken") && (
+          <p>
+            Please{" "}
+            <Link to="/" onClick={() => document.querySelector(".profile-button button").click()}>
+              log in
+            </Link>{" "}
+            to view your favorites.
+          </p>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <div className="liked-playlist-page">
+      <h2>Your Favorite Songs</h2>
+      <p className="liked-song-count">Total Songs: {songs.length}</p>
+      {songs.length === 0 ? (
+        <div className="liked-empty-playlist">
+          <p>Your playlist is empty. Start adding your favorite songs!</p>
+          <Link to="/search" className="liked-search-link">
+            Browse Music
+          </Link>
+        </div>
+      ) : (
+        <div className="liked-song-grid">
+          {songs.map((song) => (
+            <div key={song._id} className="liked-song-card">
+              <div className="liked-cover">
+                {song.coverImage ? (
+                  <img
+                    src={`http://localhost:5000/api/upload/files/${song.coverImage}`}
+                    alt={song.songTitle}
+                    className="liked-cover-image"
+                  />
+                ) : (
+                  <div className="liked-cover-placeholder">🎵</div>
+                )}
+              </div>
+
+              <div className="liked-song-info">
+                <div className="liked-song-actions">
+                <button
+                    className="liked-remove-button"
+                    onClick={() => handleRemoveFromPlaylist(song._id)}
+                    aria-label="Remove from favorites"
+                  >
+                    <FaTrash />
+                  </button>
+                  <button
+                    className="liked-play-button"
+                    onClick={() => handlePlayPause(song)}
+                    aria-label={
+                      currentSong?._id === song._id && isPlaying ? "Pause song" : "Play song"
+                    }
+                  >
+                    {currentSong?._id === song._id && isPlaying ? <FaPause /> : <FaPlay />}
+                  </button>
+                </div>
+
+                <h3>{song.songTitle}</h3>
+                <p className="liked-artist">
+                  <Link to={`/artist/${song.songArtist}`} className="liked-artist-link">
+                    {song.songArtist}
+                  </Link>
+                </p>
+                <p className="liked-album">
+                  <Link to={`/album/${song.album}`} className="liked-album-link">
+                    {song.album}
+                  </Link>
+                </p>
+
+                <p className="liked-genre" onClick={() => handleGenreClick(song.genre)}>
+                  #{song.genre}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 };
 
-export default Playlists;
+export default Playlist;

@@ -89,13 +89,6 @@ const Settings = () => {
             </button>
           </form>
         </li>
-
-        <li className="settings-section">
-          <h3 className="section-title">Other Settings</h3>
-          <p className="section-description">
-            Additional settings or preferences can go here.
-          </p>
-        </li>
       </ul>
     </div>
   );

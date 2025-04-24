@@ -5,8 +5,8 @@ import {
   faHome,
   faUser,
   faUpload,
-  faList,
-  faMagnifyingGlass, // ✅ Added for search icon
+  faMagnifyingGlass,
+  faHeart, // Added heart icon for playlist/favorites
 } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import LoginModal from "../../pages/LoginModal/LoginModal";
@@ -78,15 +78,21 @@ const NavBar = () => {
     const token = localStorage.getItem("accessToken");
     if (token) {
       try {
-        await fetch("http://localhost:5000/api/auth/logout", {
+        const response = await fetch("http://localhost:5000/api/auth/logout", {
           method: "POST",
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ refreshToken: token }), // Send the token in the body as refreshToken
         });
+
+        if (!response.ok) {
+          console.error("Logout failed:", response);
+        }
       } catch (error) {
         console.error("Logout error:", error);
       }
     }
 
+    // Clean up local storage and reset user state
     localStorage.removeItem("accessToken");
     localStorage.removeItem("username");
     localStorage.removeItem("email");
@@ -122,26 +128,28 @@ const NavBar = () => {
               </button>
             </li>
 
-            {/* ✅ Added Search button */}
             <li>
               <button onClick={() => navigate("/search")}>
                 <FontAwesomeIcon icon={faMagnifyingGlass} />
               </button>
             </li>
 
+            {/* Playlist/Favorites button - only visible when logged in */}
+           {user && (
+  <li>
+    <button onClick={() => navigate("/playlist")} title="My Playlist">
+      <FontAwesomeIcon icon={faHeart} />
+    </button>
+  </li>
+)}
+
+
             {user && (
-              <>
-                <li>
-                  <button onClick={() => navigate("/upload-song")}>
-                    <FontAwesomeIcon icon={faUpload} />
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => navigate("/playlist")}>
-                    <FontAwesomeIcon icon={faList} />
-                  </button>
-                </li>
-              </>
+              <li>
+                <button onClick={() => navigate("/upload-song")}>
+                  <FontAwesomeIcon icon={faUpload} />
+                </button>
+              </li>
             )}
             <li
               className="profile-button"

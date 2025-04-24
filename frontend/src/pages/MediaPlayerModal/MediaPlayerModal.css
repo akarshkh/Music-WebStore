@@ -1,240 +1,308 @@
 /* Main Modal Container */
-.media-player-modal-container {
-    position: fixed;
-    bottom: 90px;
-    right: 10px;
-    border-radius: 10px;
-    z-index: 1000;
-    width: 600px;
-    padding: 20px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-    opacity: 0;
-    transform: translateX(60px);
-    pointer-events: none;
+.mm-media-player-modal-container {
+  position: fixed;
+  bottom: 90px;
+  right: 10px;
+  border-radius: 10px;
+  z-index: 1000;
+  width: 600px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+  opacity: 0;
+  transform: translateX(60px);
+  pointer-events: none;
+  padding-left: 20px;
 }
 
-/* Show player when hovered */
-.media-player-wrapper:hover .media-player-modal-container {
-    opacity: 1;
-    transform: translateY(0);
-    pointer-events: auto;
+.mm-media-player-wrapper:hover .mm-media-player-modal-container {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
 }
 
-/* Hide modal when not visible */
-.media-player-hidden {
-    opacity: 0;
-    transform: translateX(60px);
-    pointer-events: none;
+.mm-media-player-hidden {
+  opacity: 0;
+  transform: translateX(60px);
+  pointer-events: none;
 }
 
-/* Music Note Button (Toggle) */
-.music-toggle-btn {
-    position: fixed;
-    bottom: 120px; /* Adjusted position */
-    right: 0px;
-    background-color: var(--primary-accent);
-    color: white;
-    border: none;
-    border-radius: 15px 0 0 15px;
-    cursor: pointer;
-    font-size: 1.8rem;
-    width: 120px;
-    height: 75px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
-    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-    transform: translateX(60px);
+/* Music Note Button */
+.mm-music-toggle-btn {
+  position: fixed;
+  bottom: 120px;
+  right: 0px;
+  background-color: var(--primary-accent);
+  color: white;
+  border: none;
+  border-radius: 15px 0 0 15px;
+  cursor: pointer;
+  font-size: 1.8rem;
+  width: 120px;
+  height: 75px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+  transform: translateX(60px);
 }
 
-/* Smooth fade-in for button after modal fades out */
-.music-toggle-btn.show-music-toggle {
-    opacity: 1;
-    pointer-events: auto;
-    transform: scale(1);
+.mm-music-toggle-btn.mm-show-music-toggle {
+  opacity: 1;
+  pointer-events: auto;
+  transform: scale(1);
 }
 
-/* Smooth fade-out for button when modal is visible */
-.music-toggle-btn.hide-music-toggle {
-    opacity: 0;
-    pointer-events: none;
-    transform: scale(0.2);
-    transform: translateX(60px);
+.mm-music-toggle-btn.mm-hide-music-toggle {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.2) translateX(60px);
 }
 
-/* Button Hover Effect */
-.music-toggle-btn:hover {
-    background-color: var(--secondary-accent);
-    transform: scale(1.1);
+.mm-music-toggle-btn:hover {
+  background-color: var(--secondary-accent);
+  transform: scale(1.1);
 }
 
 /* Seek Bar */
-.seek-bar-container {
-    height: 40px;
-    width: 100%;
-    position: relative;
-    cursor: pointer;
+.mm-seek-bar-container {
+  width: 90%;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 0;
 }
 
-.seek-bar {
-    width: 100%;
-    height: 40px;
-    background-color: var(--secondary-bg);
-    border-radius: 7px;
-    position: relative;
+.mm-seek-slider {
+  width: 100%;
+  height: 6px;
+  background-color: var(--secondary-accent);
+  border-radius: 5px;
+  outline: none;
+  appearance: none;
+  box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.25);
 }
 
-.seek-progress {
-    height: 100%;
-    background-color: var(--primary-accent);
-    border-radius: 5px;
+.mm-seek-slider::-webkit-slider-thumb,
+.mm-seek-slider::-moz-range-thumb {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background-color: var(--primary-accent);
+  cursor: pointer;
 }
 
-/* Seek Bar Text */
-.seek-text {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 14px;
-    color: var(--font-color);
-    display: flex;
-    justify-content: space-between;
-    width: 90%;
+.mm-seek-text {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: white;
+  margin-top: 6px;
 }
 
 /* Media Content */
-.media-content {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    gap: 20px;
+.mm-media-content {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 20px;
 }
 
-/* Cover Image */
-.media-cover {
-    height: 130px;
-    width: 130px;
-    aspect-ratio: 1;
-    object-fit: cover;
-    border-radius: 8px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-    background-color: #888;
+.mm-media-cover {
+  height: 130px;
+  width: 130px;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.25);
+  background-color: #888;
 }
 
-/* Media Info */
-.media-info {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    background-color: var(--secondary-bg);
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-    border-radius: 8px;
-    padding: 10px;
+.mm-placeholder-cover {
+  height: 130px;
+  width: 130px;
 }
 
-/* Song Title & Like Button */
-.song-title-heart {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px;
+.mm-placeholder-cover-icon {
+  padding-top: 55px;
 }
 
-.song-title {
-    font-size: 18px;
-    font-weight: bold;
-    color: var(--font-color);
+.mm-media-info {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background-color: var(--secondary-accent);
+  box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.25);
+  border-radius: 8px;
+  height: 100px;
+  padding: 15px;
+  padding-bottom: 30px;
+  padding-top: 0px;
 }
 
-.heart-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 20px;
-    transition: transform 0.3s;
+/* Song Title, Volume Slider, Mute Button, Like Button */
+.mm-inline-layout {
+  display: flex;
+  flex-direction: row; /* Horizontal layout */
+  align-items: center;
+  width: 100%;
+  gap: 2px;
 }
 
-.heart-btn:hover {
-    transform: scale(1.1);
+.mm-song-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  flex: 0 0 50%; /* Takes up 60% of the space */
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-right: 40px;
+}
+
+.mm-volume-slider {
+  flex: 0 0 20%; /* Takes up 30% of the space */
+  width: 50%;
+  margin-right: 10px;
+  appearance: none;
+  height: 4px;
+  background-color: white;
+  border-radius: 5px;
+}
+
+.mm-volume-slider::-webkit-slider-thumb,
+.mm-volume-slider::-moz-range-thumb {
+  width: 10px;
+  height: 10px;
+  background-color: var(--primary-accent);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.mm-mute-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  color: white;
+  margin-top: 3px;
+}
+
+.mm-like-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  color: white;
 }
 
 /* Artist & Album Info */
-.artist-album {
-    padding: 8px;
-    display: flex;
-    font-weight: bold;
-    justify-content: space-between;
+.mm-artist-album {
+  padding: 8px;
+  display: flex;
+  justify-content: space-between;
 }
 
-.artist-name,
-.album-name {
-    font-size: 14px;
-    color: var(--font-color);
+.mm-artist-name,
+.mm-album-name {
+  font-size: 14px;
+  color: white;
 }
 
 /* Controls */
-.controls {
-    padding-top: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
+.mm-controls {
+  padding-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 }
 
-.control-btn {
-    background: none;
-    border: none;
-    color: var(--primary-accent);
-    font-size: 20px;
-    cursor: pointer;
-    transition: transform 0.3s, color 0.3s;
+.mm-control-btn {
+  background: none;
+  border: none;
+  color: var(--primary-accent);
+  font-size: 20px;
+  cursor: pointer;
+  transition: transform 0.3s, color 0.3s;
 }
 
-.control-btn:hover {
-    transform: scale(1.1);
-    color: var(--secondary-accent);
+.mm-control-btn:hover {
+  transform: scale(1.1);
+  color: white;
 }
 
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
-    .media-player-modal-container {
-        width: 90%;
-        right: 5%;
-        bottom: 10px;
-    }
+  .mm-media-player-modal-container {
+    width: 90%;
+    right: 5%;
+    bottom: 10px;
+  }
 
-    .media-cover {
-        height: 100px;
-        width: 100px;
-    }
+  .mm-media-cover {
+    width: 100px;
+    height: 100px;
+  }
 
-    .media-info {
-        padding: 8px;
-    }
+  .mm-media-info {
+    padding: 8px;
+  }
 
-    .song-title {
-        font-size: 16px;
-    }
+  .mm-song-title {
+    font-size: 16px;
+  }
 
-    .artist-name,
-    .album-name {
-        font-size: 12px;
-    }
+  .mm-artist-name,
+  .mm-album-name {
+    font-size: 12px;
+  }
 
-    .controls {
-        padding-top: 10px;
-    }
+  .mm-controls {
+    padding-top: 10px;
+  }
 
-    .music-toggle-btn {
-        width: 120px;
-        height: 60px;
-        font-size: 1.5rem;
-        bottom: 80px;
-    }
+  .mm-music-toggle-btn {
+    width: 120px;
+    height: 60px;
+    font-size: 1.5rem;
+    bottom: 80px;
+  }
+}
+
+.mm-artist-album-duration {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.85rem;
+  color: white;
+  margin-top: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.mm-artist-album-duration span {
+  flex: 1;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 10px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.mm-artist-album-duration .mm-artist-name {
+  text-align: left;
+  font-size: 14px;
+}
+
+.mm-artist-album-duration .mm-album-name {
+  text-align: right;
+  font-size: 14px;
 }
