@@ -12,7 +12,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import "./MediaPlayerModal.css";
 import { MediaPlayerContext } from "../../context/MediaPlayerContext";
-import LikeButton from "../../pages/LikeButton/LikeButton"; // Import the LikeButton component
+import LikeButton from "../../pages/LikeButton/LikeButton";
 
 const MediaPlayerModal = () => {
   const {
@@ -32,7 +32,6 @@ const MediaPlayerModal = () => {
     if (!audio) return;
 
     const updateTime = () => setCurrentTime(audio.currentTime);
-
     const updateDuration = () => {
       if (!isNaN(audio.duration) && audio.duration > 0) {
         setDuration(audio.duration);
@@ -43,10 +42,8 @@ const MediaPlayerModal = () => {
     audio.addEventListener("loadedmetadata", updateDuration);
     audio.addEventListener("canplaythrough", updateDuration);
 
-    // Reload metadata if song changed
     audio.load();
 
-    // In case metadata is already available
     if (!isNaN(audio.duration)) {
       setDuration(audio.duration);
     }
@@ -74,67 +71,69 @@ const MediaPlayerModal = () => {
   const hideModal = () => setIsVisible(false);
 
   return (
-    <div className="media-player-wrapper">
+    <div className="mm-media-player-wrapper">
       <button
-        className={`music-toggle-btn ${isVisible ? "hide-music-toggle" : "show-music-toggle"}`}
+        className={`mm-music-toggle-btn ${isVisible ? "mm-hide-music-toggle" : "mm-show-music-toggle"}`}
         onMouseEnter={showModal}
       >
         <FontAwesomeIcon icon={faMusic} />
       </button>
 
       <div
-        className={`media-player-modal-container ${isVisible ? "" : "media-player-hidden"}`}
+        className={`mm-media-player-modal-container ${isVisible ? "" : "mm-media-player-hidden"}`}
         onMouseEnter={showModal}
         onMouseLeave={hideModal}
       >
-        <div className="seek-bar-container">
+        <div className="mm-seek-bar-container">
           <input
             type="range"
-            className="seek-slider"
+            className="mm-seek-slider"
             min="0"
             max={duration || 0}
             step="0.1"
             value={currentTime}
             onChange={handleSeek}
           />
-          <div className="seek-text">
-            <span>{formatTime(currentTime)}</span>
-            <span>{formatTime(duration)}</span>
-          </div>
         </div>
 
-        <div className="media-content">
+        <div className="mm-media-content">
           {currentSong ? (
             <img
               src={`http://localhost:5000/api/upload/files/${currentSong.coverImage}`}
               alt="Album Cover"
-              className="media-cover"
+              className="mm-media-cover"
             />
           ) : (
-            <div className="media-cover placeholder-cover">
-              <FontAwesomeIcon className="placeholder-cover-icon" icon={faMusic} size="1x" />
+            <div className="mm-media-cover mm-placeholder-cover">
+              <FontAwesomeIcon className="mm-placeholder-cover-icon" icon={faMusic} size="1x" />
             </div>
           )}
 
-          <div className="media-info">
-            <div className="song-title-heart">
-              <div className="song-title">{currentSong?.songTitle || "No Song Selected"}</div>
+          <div className="mm-media-info">
+            <div className="mm-song-title-heart">
+              <div className="mm-song-title">{currentSong?.songTitle || "No Song Selected"}</div>
+              <LikeButton
+                songId={currentSong?._id}
+                onLikeChange={(liked) => console.log("Liked changed:", liked)}
+              />
+            </div>
 
-              {/* Integrating LikeButton component here */}
-              <LikeButton songId={currentSong?._id} onLikeChange={(liked) => console.log("Liked changed:", liked)} />
+            <div className="mm-artist-album-duration">
+              <span className="mm-artist-name">{currentSong?.songArtist || "Artist"}</span>
+              <span className="mm-media-duration">
+                {formatTime(currentTime)} / {formatTime(duration)}
+              </span>
+              <span className="mm-album-name">{currentSong?.album || "Album"}</span>
             </div>
-            <div className="artist-album">
-              <div className="artist-name">{currentSong?.songArtist || "Artist"}</div>
-              <div className="album-name">{currentSong?.album || "Album"}</div>
-            </div>
-            <div className="controls">
-              <button className="control-btn"><FontAwesomeIcon icon={faShuffle} /></button>
-              <button className="control-btn"><FontAwesomeIcon icon={faStepBackward} /></button>
-              <button className="control-btn" onClick={togglePlayPause}>
+
+            <div className="mm-controls">
+              <button className="mm-control-btn"><FontAwesomeIcon icon={faShuffle} /></button>
+              <button className="mm-control-btn"><FontAwesomeIcon icon={faStepBackward} /></button>
+              <button className="mm-control-btn" onClick={togglePlayPause}>
                 <FontAwesomeIcon icon={isPlaying ? faPause : faPlay} />
               </button>
-              <button className="control-btn"><FontAwesomeIcon icon={faStepForward} /></button>
-              <button className="control-btn"><FontAwesomeIcon icon={faRedo} /></button>
+              <button className="mm-control-btn"><FontAwesomeIcon icon={faStepForward} /></button>
+              <button className="mm-control-btn"><FontAwesomeIcon icon={faRedo} /></button>
             </div>
           </div>
         </div>
