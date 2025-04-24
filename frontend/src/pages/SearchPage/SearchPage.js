@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom"; // Import useLocation for accessing query params
 import "./SearchPage.css";
 import { MediaPlayerContext } from "../../context/MediaPlayerContext";
 import { FaPlay, FaPause } from "react-icons/fa";
@@ -11,6 +11,19 @@ const SearchPage = () => {
   const [query, setQuery] = useState("");
   const [error, setError] = useState(null);
   const { playSong, currentSong, isPlaying, togglePlayPause } = useContext(MediaPlayerContext);
+  
+  // Get the current location (URL) to extract query parameter
+  const location = useLocation();
+  
+  useEffect(() => {
+    // Extract the query parameter 'q' from the URL
+    const params = new URLSearchParams(location.search);
+    const searchQuery = params.get('q');
+    
+    if (searchQuery) {
+      setQuery(searchQuery); // Set the query state to the extracted genre or term
+    }
+  }, [location]); // Only re-run when the location changes
 
   useEffect(() => {
     const fetchSongs = async () => {
@@ -46,7 +59,7 @@ const SearchPage = () => {
   };
 
   const handleGenreClick = (genre) => {
-    setQuery(genre);
+    setQuery(genre); // Set the genre in the search bar
   };
 
   return (
@@ -55,9 +68,9 @@ const SearchPage = () => {
       <input
         type="text"
         placeholder="Search by title, artist, tags, or genre..."
-        value={query}
+        value={query} // Bind the search bar to the query state
         onChange={(e) => {
-          setQuery(e.target.value);
+          setQuery(e.target.value); // Update query on input change
           setLoading(true);
         }}
         className="search-input"

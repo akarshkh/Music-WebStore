@@ -1,4 +1,3 @@
-// frontend/src/pages/MediaPlayerModal/MediaPlayerModal.js
 import React, { useContext, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -13,6 +12,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import "./MediaPlayerModal.css";
 import { MediaPlayerContext } from "../../context/MediaPlayerContext";
+import LikeButton from "../../pages/LikeButton/LikeButton"; // Import the LikeButton component
 
 const MediaPlayerModal = () => {
   const {
@@ -25,7 +25,6 @@ const MediaPlayerModal = () => {
 
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [liked, setLiked] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -36,7 +35,6 @@ const MediaPlayerModal = () => {
 
     const updateDuration = () => {
       if (!isNaN(audio.duration) && audio.duration > 0) {
-        console.log("Updated duration:", audio.duration);
         setDuration(audio.duration);
       }
     };
@@ -121,9 +119,9 @@ const MediaPlayerModal = () => {
           <div className="media-info">
             <div className="song-title-heart">
               <div className="song-title">{currentSong?.songTitle || "No Song Selected"}</div>
-              <button className="heart-btn" onClick={() => setLiked(!liked)}>
-                <FontAwesomeIcon icon={faHeart} color={liked ? "white" : "black"} />
-              </button>
+
+              {/* Integrating LikeButton component here */}
+              <LikeButton songId={currentSong?._id} onLikeChange={(liked) => console.log("Liked changed:", liked)} />
             </div>
             <div className="artist-album">
               <div className="artist-name">{currentSong?.songArtist || "Artist"}</div>

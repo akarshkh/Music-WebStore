@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { MediaPlayerContext } from "../../context/MediaPlayerContext";
 import { FaHeart, FaPlay, FaPause } from "react-icons/fa";
-import "../Album/AlbumDetail.css";
+import "./AlbumDetail.css";
 import LikeButton from "../../pages/LikeButton/LikeButton";
 
 const AlbumDetail = () => {
